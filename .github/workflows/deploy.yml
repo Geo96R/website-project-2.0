@@ -8,6 +8,9 @@ permissions:
   contents: read
   packages: write
 
+env:
+  IMAGE: ghcr.io/geo96r/website-project-2.0
+
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
@@ -38,10 +41,9 @@ jobs:
       id: meta
       uses: docker/metadata-action@v5
       with:
-        images: ghcr.io/${{ github.repository }}
+        images: ${{ env.IMAGE }}
         tags: |
           type=ref,event=branch
-          type=ref,event=pr
           type=sha,prefix={{branch}}-
           type=raw,value=latest,enable={{is_default_branch}}
           
@@ -59,7 +61,7 @@ jobs:
     - name: Run Trivy security scan
       uses: aquasecurity/trivy-action@0.35.0
       with:
-        image-ref: 'ghcr.io/${{ github.repository }}:latest'
+        image-ref: '${{ env.IMAGE }}:latest'
         format: 'table'
         exit-code: '0'
         severity: 'CRITICAL,HIGH'
@@ -83,7 +85,7 @@ jobs:
         KUBE_CONFIG: ${{ secrets.KUBECONFIG }}
       run: |
         echo "Deploying to production"
-        echo "Image: ghcr.io/${{ github.repository }}:latest"
+        echo "Image: ${{ env.IMAGE }}:latest"
         printf '%s' "$KUBE_CONFIG" | base64 -d > /tmp/kubeconfig
         chmod 600 /tmp/kubeconfig
         export KUBECONFIG=/tmp/kubeconfig
