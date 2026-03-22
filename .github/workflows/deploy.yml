@@ -86,7 +86,7 @@ jobs:
       run: |
         echo "Deploying to production"
         echo "Image: ${{ env.IMAGE }}:latest"
-        printf '%s' "$KUBE_CONFIG" | base64 -d > /tmp/kubeconfig
+        printf '%s' "$KUBE_CONFIG" > /tmp/kubeconfig
         chmod 600 /tmp/kubeconfig
         export KUBECONFIG=/tmp/kubeconfig
         kubectl rollout restart deployment/website-project

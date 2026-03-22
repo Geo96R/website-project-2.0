@@ -1,6 +1,6 @@
 # DevOps Portfolio
 
-A server-rendered portfolio site built with Express and EJS, deployed on Kubernetes with full infrastructure-as-code. The site covers architecture decisions, security practices, Kubernetes patterns, case studies, and research — everything backed by the same tooling described in the content.
+A server-rendered portfolio site built with Express and EJS, deployed on Kubernetes with full infrastructure-as-code. The site covers architecture decisions, security practices, Kubernetes patterns, case studies, and research - everything backed by the same tooling described in the content.
 
 ## Tech Stack
 
@@ -77,15 +77,15 @@ docker run -p 3000:3000 website-project
     └── auto-version.yml       # Semantic version tagging
 ```
 
-Production `k8s/` configs are gitignored — `k8s-demo/` contains equivalent sanitized examples with placeholder values so you can replicate the setup.
+Production `k8s/` configs are gitignored - `k8s-demo/` contains equivalent sanitized examples with placeholder values so you can replicate the setup.
 
 ## Deployment
 
 Pushes to `main` trigger the full pipeline automatically:
 
-1. **Build** — Docker image built and pushed to GitHub Container Registry
-2. **Scan** — Trivy scans the image for critical/high vulnerabilities
-3. **Deploy** — `kubectl rollout restart` against the K3s cluster
+1. **Build** - Docker image built and pushed to GitHub Container Registry
+2. **Scan** - Trivy scans the image for critical/high vulnerabilities
+3. **Deploy** - `kubectl rollout restart` against the K3s cluster
 
 Infrastructure changes under `infra/cloudflare/` trigger a separate Terraform workflow.
 
@@ -103,7 +103,7 @@ Infrastructure changes under `infra/cloudflare/` trigger a separate Terraform wo
 
 ## Why Gateway API over Ingress
 
-[Ingress NGINX is retired as of March 2026](https://www.kubernetes.dev/blog/2025/11/12/ingress-nginx-retirement/) — no more releases, bugfixes, or security patches. Gateway API is the official successor with better role separation (infra vs app teams), richer routing, and active development. This project uses Contour as the Gateway controller with Envoy as the data plane.
+[Ingress NGINX is retired as of March 2026](https://www.kubernetes.dev/blog/2025/11/12/ingress-nginx-retirement/) - no more releases, bugfixes, or security patches. Gateway API is the official successor with better role separation (infra vs app teams), richer routing, and active development. This project uses Contour as the Gateway controller with Envoy as the data plane.
 
 The `k8s-demo/gateway-api/` directory has ready-to-use examples.
 
