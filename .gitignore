@@ -1,0 +1,74 @@
+# Dependencies
+node_modules/
+/.pnp
+.pnp.js
+
+# REAL Kubernetes configs (production secrets, real image refs, real IPs)
+k8s/
+
+# Next.js (deprecated legacy app — not part of current site)
+/.next/
+/out/
+
+# Legacy Next.js app directories (not used in Express site)
+app/
+components/
+hooks/
+styles/
+middleware.js
+instrumentation.js
+next.config.js
+tailwind.config.js
+postcss.config.js
+
+# Misc
+.DS_Store
+
+# Debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Local env files
+.env*.local
+.env
+.env.*
+
+# Vercel
+.vercel
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+# Logs
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+Thumbs.db
+
+# Backup files
+*.bak
+*~
+
+# Temporary files
+tmp/
+temp/
+
+# Basic auth / secrets (local only)
+htpasswd
+
+
+# Terraform runtime (real state contains secrets)
+infra/cloudflare/.terraform/
+infra/cloudflare/*.tfstate
+infra/cloudflare/*.tfstate.backup
+infra/cloudflare/.terraform.lock.hcl
+infra/cloudflare/terraform.tfvars
+infra/cloudflare/*.tfvars

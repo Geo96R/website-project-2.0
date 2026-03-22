@@ -1,0 +1,87 @@
+<!-- ===== KUBERNETES ===== -->
+<section id="kubernetes" style="padding-top:80px;">
+  <div class="sh">
+    <div class="si-idx">03</div>
+    <div>
+      <div class="s-tag">Modernization Track</div>
+      <h2 class="s-title">Kubernetes Operations<br>&amp; Migration Path</h2>
+      <p class="s-desc">
+        I operate Kubernetes for specific workloads alongside an existing Docker fleet.
+        The focus is practical reliability: deployments, routing, TLS, storage, and scaling.
+        Resources such as Helm, Contour, cert-manager, IRSA, and HPA are part of the toolset depending on the environment.
+        Migration work is staged and reversible, with changes validated before rollout.
+      </p>
+    </div>
+  </div>
+
+  <div class="panel-grid g3">
+    <div class="panel">
+      <div class="p-lbl">Cluster Operations</div>
+      <div class="p-title">EKS Environments (Workload-Focused)</div>
+      <div class="p-body">
+        Operated Kubernetes workloads on EKS for analytics and internal services.
+        Focus areas: upgrades, reliability, resource limits, and operational guardrails.
+        Changes are validated in a controlled workflow before promotion.
+      </div>
+      <div class="tags"><span class="tag blue">EKS</span><span class="tag">Operations</span><span class="tag">Guardrails</span></div>
+    </div>
+    <div class="panel">
+      <div class="p-lbl">Ingress Strategy</div>
+      <div class="p-title">Contour + Gateway API</div>
+      <div class="p-body">
+        Migrated a personal production setup from Ingress-NGINX to Gateway API with Contour as the data plane.
+        HTTPRoute replaces legacy Ingress manifests, with clearer routing semantics and safer change control.
+        TLS is managed through a dedicated certificate workflow, and routes are validated before rollout.
+      </div>
+      <div class="tags"><span class="tag">Contour</span><span class="tag">Gateway API</span><span class="tag">HTTPRoute</span></div>
+    </div>
+    <div class="panel">
+      <div class="p-lbl">Storage + Identity</div>
+      <div class="p-title">PV/PVC + IRSA Binding</div>
+      <div class="p-body">
+        PV/PVC lifecycle management for stateful workloads, with shared storage where cross-node persistence is required.
+        IAM role binding (IRSA where applicable) used for pod-level AWS access.
+        Preference is role-based identity over static credentials in workloads.
+      </div>
+      <div class="tags"><span class="tag">PV/PVC</span><span class="tag amber">EFS</span><span class="tag blue">IRSA</span></div>
+    </div>
+    <div class="panel">
+      <div class="p-lbl">Scaling + Governance</div>
+      <div class="p-title">HPA + ResourceQuota</div>
+      <div class="p-body">
+        HPA configured against CPU and custom metrics. Namespace-level ResourceQuota
+        prevents resource contention between workloads. Pod Disruption Budgets maintain
+        availability during rolling updates. Liveness and readiness probes required on
+        all managed workloads.
+      </div>
+      <div class="tags"><span class="tag">HPA</span><span class="tag">ResourceQuota</span><span class="tag">PDB</span></div>
+    </div>
+    <div class="panel">
+      <div class="p-lbl">Deployment Tooling</div>
+      <div class="p-title">Helm-First Workflow</div>
+      <div class="p-body">
+        All Kubernetes workloads deployed via Helm charts with per-environment values
+        files. Chart versions tied to Git tags. Every manifest goes through
+        <code style="color:var(--amber)">--dry-run=server</code> and
+        <code style="color:var(--amber)">kubectl diff</code> before being applied.
+        No ad-hoc imperative changes to live clusters.
+      </div>
+      <div class="tags"><span class="tag">Helm</span><span class="tag blue">kubectl diff</span><span class="tag">dry-run</span></div>
+    </div>
+    <div class="panel">
+      <div class="p-lbl">Operational Fluency</div>
+      <div class="p-title">Kubernetes Operations in Production</div>
+      <div class="p-body">
+        Kubernetes operations experience from running cluster workloads in production
+        and controlled environments. Understanding of resource scheduling, failure modes,
+        and upgrade sequencing comes from operating environments where breakage has
+        consequences. <code style="color:var(--amber)">kubectl explain</code> is the
+        first reference. Reading the spec directly is the habit.
+      </div>
+      <div class="t-block">
+        <div><span class="tp">$</span> <span class="tc">kubectl explain pod.spec.containers.livenessProbe</span></div>
+        <div class="tco"># Read the spec. Understand it. Then apply it.</div>
+      </div>
+    </div>
+  </div>
+</section>

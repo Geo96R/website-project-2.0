@@ -1,0 +1,54 @@
+resource "cloudflare_record" "root_a" {
+  zone_id = var.zone_id
+  name    = var.domain
+  content = var.server_ip
+  type    = "A"
+  proxied = true
+  
+  lifecycle {
+    # Prevents accidental deletion
+    prevent_destroy = false
+    # If record already exists and has different settings, adopt them
+    ignore_changes = []
+  }
+}
+
+resource "cloudflare_record" "acme_challenge" {
+  zone_id = var.zone_id
+  name    = "_acme-challenge"
+  content = "YOUR_ACME_CHALLENGE_VALUE"
+  type    = "TXT"
+  proxied = false
+  ttl     = 120
+  
+  lifecycle {
+    prevent_destroy = false
+    ignore_changes = []
+  }
+}
+
+resource "cloudflare_record" "www_redirect" {
+  zone_id = var.zone_id
+  name    = "www"
+  content = var.domain
+  type    = "CNAME"
+  proxied = true
+  
+  lifecycle {
+    prevent_destroy = false
+    ignore_changes = []
+  }
+}
+
+resource "cloudflare_record" "argocd" {
+  zone_id = var.zone_id
+  name    = "argocd"
+  content = var.server_ip
+  type    = "A"
+  proxied = true
+  
+  lifecycle {
+    prevent_destroy = false
+    ignore_changes = []
+  }
+}

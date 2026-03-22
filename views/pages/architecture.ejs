@@ -1,0 +1,321 @@
+<!-- ===== ARCHITECTURE ===== -->
+<section id="architecture" style="padding-top:80px;">
+  <div class="sh">
+    <div class="si-idx">01</div>
+    <div>
+      <div class="s-tag">Experience in Production Environments</div>
+      <h2 class="s-title">High-Density Container<br>Infrastructure</h2>
+      <p class="s-desc">
+        Hosts running 100&ndash;200 isolated application containers behind per-tenant
+        NGINX reverse proxy configuration. SSL lifecycle, PHP-FPM pool tuning, and
+        container orchestration are fully automated across a fleet of 20+ servers
+        spanning multiple VPS providers.
+      </p>
+    </div>
+  </div>
+
+  <div class="node-bar">
+    <div class="nd"><div class="ndot"></div><span class="nname">prod-node-01</span></div><div class="ndiv"></div>
+    <div class="nd"><div class="ndot"></div><span class="nname">prod-node-02</span></div><div class="ndiv"></div>
+    <div class="nd"><div class="ndot"></div><span class="nname">prod-node-03</span></div><div class="ndiv"></div>
+    <div class="nd"><div class="ndot"></div><span class="nname">docker-VPS-01</span></div><div class="ndiv"></div>
+    <div class="nd"><div class="ndot"></div><span class="nname">docker-VPS-02</span></div><div class="ndiv"></div>
+    <div class="nd"><div class="ndot"></div><span class="nname">docker-VPS-03</span></div><div class="ndiv"></div>
+    <div class="nd"><div class="ndot"></div><span class="nname">docker-VPS-04</span></div><div class="ndiv"></div>
+    <div class="nd"><div class="ndot"></div><span class="nname">storage-node-01</span></div><div class="ndiv"></div>
+    <div class="nd"><div class="ndot"></div><span class="nname">replica-storage-01</span></div><div class="ndiv"></div>
+    <div class="nd"><div class="ndot"></div><span class="nname">analytics-node-01</span></div><div class="ndiv"></div>
+    <div class="nd"><div class="ndot"></div><span class="nname">analytics-node-02</span></div><div class="ndiv"></div>
+    <div class="nd"><div class="ndot"></div><span class="nname">+22 nodes/vps</span></div>
+  </div>
+
+  <div class="panel-grid g2" style="margin-bottom:2px">
+    <div class="panel">
+      <div class="p-lbl">Layer 0  Edge</div>
+      <div class="p-title">Cloudflare + NGINX Multi-Tenant Routing</div>
+      <div class="p-body">
+        All inbound traffic passes through Cloudflare before reaching origin. NGINX
+        server blocks are generated programmatically  one upstream per tenant, no
+        config sharing across instances. SSL termination at proxy layer with automated
+        lifecycle management. ModSecurity OWASP CRS deployed and tuned per host.
+        Paranoia levels calibrated to minimize false positives without reducing protection.
+      </div>
+      <div class="tags">
+        <span class="tag">Cloudflare WAF</span>
+        <span class="tag">NGINX</span>
+        <span class="tag red">ModSecurity OWASP CRS</span>
+        <span class="tag">SSL Lifecycle</span>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="p-lbl">Layer 1  Container Fleet</div>
+      <div class="p-title">Isolated Docker Compose Fleets</div>
+      <div class="p-body">
+        100&ndash;200 Docker Compose stacks per host running web application workloads
+        including PHP-based CMS, custom applications, and Supabase-backed services.
+        Each container runs its own PHP-FPM process pool, isolated volume mounts, and
+        dedicated or shared managed DB. Pools tiered by traffic class. No shared
+        runtime between tenants. Health checks automated. Images hardened and version-pinned.
+      </div>
+      <div class="tags">
+        <span class="tag">Docker Compose</span>
+        <span class="tag">PHP-FPM Tiering</span>
+        <span class="tag violet">Supabase</span>
+        <span class="tag amber">Managed DB</span>
+      </div>
+    </div>
+  </div>
+  <div class="panel-grid g2" style="margin-bottom:40px">
+    <div class="panel">
+      <div class="p-lbl">Layer 2  Automation</div>
+      <div class="p-title">Ansible + Semaphore Fleet Orchestration</div>
+      <div class="p-body">
+        All fleet operations  SSL renewal, container restarts, backup triggers,
+        application updates, security rule deployments  driven by Ansible playbooks
+        executed through Semaphore UI. YAML inventory maps server roles to targeted host
+        groups. Color-coded logging surfaces failures without noise. All playbooks are
+        Git-versioned and idempotent. No manual per-server operations at this fleet scale.
+      </div>
+      <div class="tags">
+        <span class="tag">Ansible</span>
+        <span class="tag">Semaphore UI</span>
+        <span class="tag">YAML Inventory</span>
+        <span class="tag blue">Git-Versioned</span>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="p-lbl">Layer 3  Observability</div>
+      <div class="p-title">Full-Stack Monitoring Pipeline</div>
+      <div class="p-body">
+        cAdvisor exposes per-container CPU, memory, and network metrics. Node Exporter
+        covers host-level resource utilization. Prometheus scrapes both, feeding Grafana
+        dashboards built for container-dense environments. Loki aggregates application
+        and access logs for cross-host querying. Matomo analytics deployed across multiple
+        instances with managed DB topology and Cloudflare edge caching on tracker
+        endpoints. Kuma handles per-service uptime monitoring.
+      </div>
+      <div class="tags">
+        <span class="tag">Prometheus</span>
+        <span class="tag">Grafana</span>
+        <span class="tag blue">Loki</span>
+        <span class="tag">cAdvisor</span>
+        <span class="tag">Node Exporter</span>
+        <span class="tag violet">Matomo</span>
+        <span class="tag">Kuma</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="code-block">
+    <div class="cm"># Website deployment infrastructure</div><br>
+    <div><span class="kw">Source:</span>     <span class="bx">GitHub Repository</span> (version-controlled)</div>
+    <div style="margin-left:24px">&#x2193;</div>
+    <div><span class="kw">CI/CD:</span>      <span class="bx">GitHub Actions</span> &#x2192; <span class="vl">Multi-stage Docker Build</span> &#x2192; <span class="bx">Container Security Scan</span></div>
+    <div style="margin-left:24px">&#x2193;</div>
+    <div><span class="kw">Registry:</span>   <span class="bx">GitHub Container Registry</span> (private image storage)</div>
+    <div style="margin-left:24px">&#x2193;</div>
+    <div><span class="kw">GitOps:</span>     <span class="bx">ArgoCD</span> (declarative deployment automation)</div>
+    <div style="margin-left:24px">&#x2193;</div>
+    <div><span class="kw">Orchestration:</span> <span class="bx">Kubernetes</span> (production cluster)</div>
+    <div style="margin-left:24px">&#x251C;&#x2500; <span class="vl">Deployment</span> (high availability, rolling updates)</div>
+    <div style="margin-left:24px">&#x251C;&#x2500; <span class="vl">Service</span> (internal networking, load balancing)</div>
+    <div style="margin-left:24px">&#x2514;&#x2500; <span class="vl">Gateway API</span> (Contour ingress controller)</div>
+    <div style="margin-left:24px">    &#x251C;&#x2500; <span class="cm">Gateway</span> (TLS termination, automated certificate management)</div>
+    <div style="margin-left:24px">    &#x2514;&#x2500; <span class="cm">HTTPRoute</span> (declarative routing configuration)</div>
+    <div style="margin-left:24px">&#x2193;</div>
+    <div><span class="kw">Edge:</span>       <span class="bx">Cloudflare</span> (DNS, WAF, DDoS protection, edge caching)</div>
+    <div style="margin-left:24px">&#x2193;</div>
+    <div><span class="kw">Observability:</span> <span class="bx">Grafana Cloud</span> (unified metrics, logs, traces)</div>
+    <div style="margin-left:24px">&#x251C;&#x2500; <span class="cm">OpenTelemetry</span> (standardized instrumentation)</div>
+    <div style="margin-left:24px">&#x2514;&#x2500; <span class="cm">OTEL Collector</span> (telemetry pipeline)</div>
+  </div>
+
+  <!-- Architecture Diagrams Section -->
+  <div style="margin-top:80px;">
+    <div class="sh">
+      <div class="si-idx"></div>
+      <div>
+        <h2 class="s-title">Infrastructure Patterns</h2>
+        <p class="s-desc">Reference architecture diagrams showing request flows and deployment pipelines.</p>
+      </div>
+    </div>
+
+    <!-- Diagram 1: Web Request Flow -->
+    <div class="arch-diagram" style="margin-top:52px;">
+      <div class="arch-title">Web Request Flow (Reference)</div>
+      <div class="arch-svg-wrapper">
+        <svg class="arch-svg-diagram" viewBox="0 0 1200 200" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="arrow" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+              <polygon points="0 0, 6 3, 0 6" fill="var(--accent)" opacity="0.5"/>
+            </marker>
+            <filter id="tracerGlow">
+              <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+              <feMerge>
+                <feMergeNode in="coloredBlur"/>
+                <feMergeNode in="SourceGraphic"/>
+              </feMerge>
+            </filter>
+          </defs>
+          
+          <!-- Tracer follows only the drawn arrow segments (gaps between nodes); subpaths jump across box widths so the dot never crosses interiors -->
+          <path id="requestPath" d="M 150 100 L 190 100 M 290 100 L 330 100 M 430 100 L 470 100 M 570 100 L 610 100 M 710 100 L 750 100 M 850 100 L 890 100 M 990 100 L 1030 100" fill="none" stroke="none"/>
+          
+          <!-- Nodes with proper spacing (120px between centers, 100px wide boxes) -->
+          <g class="arch-node" transform="translate(50, 60)">
+            <rect x="0" y="0" width="100" height="80" rx="3" class="arch-node-box"/>
+            <text x="50" y="30" class="arch-node-title" text-anchor="middle">Client</text>
+            <text x="50" y="50" class="arch-node-sub" text-anchor="middle">Browser / API</text>
+          </g>
+          
+          <g class="arch-node" transform="translate(190, 60)">
+            <rect x="0" y="0" width="100" height="80" rx="3" class="arch-node-box"/>
+            <text x="50" y="30" class="arch-node-title" text-anchor="middle">DNS</text>
+            <text x="50" y="50" class="arch-node-sub" text-anchor="middle">Resolver</text>
+          </g>
+          
+          <g class="arch-node" transform="translate(330, 60)">
+            <rect x="0" y="0" width="100" height="80" rx="3" class="arch-node-box"/>
+            <text x="50" y="30" class="arch-node-title" text-anchor="middle">Edge</text>
+            <text x="50" y="50" class="arch-node-sub" text-anchor="middle">CDN Cache</text>
+          </g>
+          
+          <g class="arch-node" transform="translate(470, 60)">
+            <rect x="0" y="0" width="100" height="80" rx="3" class="arch-node-box"/>
+            <text x="50" y="30" class="arch-node-title" text-anchor="middle">Security</text>
+            <text x="50" y="50" class="arch-node-sub" text-anchor="middle">WAF / Rate</text>
+          </g>
+          
+          <g class="arch-node" transform="translate(610, 60)">
+            <rect x="0" y="0" width="100" height="80" rx="3" class="arch-node-box"/>
+            <text x="50" y="30" class="arch-node-title" text-anchor="middle">Gateway</text>
+            <text x="50" y="50" class="arch-node-sub" text-anchor="middle">TLS / Route</text>
+          </g>
+          
+          <g class="arch-node" transform="translate(750, 60)">
+            <rect x="0" y="0" width="100" height="80" rx="3" class="arch-node-box"/>
+            <text x="50" y="30" class="arch-node-title" text-anchor="middle">Kubernetes</text>
+            <text x="50" y="50" class="arch-node-sub" text-anchor="middle">Service / Pods</text>
+          </g>
+          
+          <g class="arch-node" transform="translate(890, 60)">
+            <rect x="0" y="0" width="100" height="80" rx="3" class="arch-node-box"/>
+            <text x="50" y="30" class="arch-node-title" text-anchor="middle">Data</text>
+            <text x="50" y="50" class="arch-node-sub" text-anchor="middle">Cache / DB</text>
+          </g>
+          
+          <!-- Observability side branch -->
+          <g class="arch-node arch-obs" transform="translate(1030, 60)">
+            <rect x="0" y="0" width="100" height="80" rx="3" class="arch-node-box"/>
+            <text x="50" y="28" class="arch-node-title arch-obs-title" text-anchor="middle">Observability</text>
+            <text x="50" y="48" class="arch-node-sub arch-obs-sub" text-anchor="middle">Logs / Metrics</text>
+          </g>
+          <path d="M 990 100 L 1030 100" stroke="var(--border)" stroke-width="1" fill="none" marker-end="url(#arrow)" opacity="0.4"/>
+          
+          <!-- Connection lines (aligned with node centers at y=100) -->
+          <path d="M 150 100 L 190 100" stroke="var(--border)" stroke-width="1" fill="none" marker-end="url(#arrow)"/>
+          <path d="M 290 100 L 330 100" stroke="var(--border)" stroke-width="1" fill="none" marker-end="url(#arrow)"/>
+          <path d="M 430 100 L 470 100" stroke="var(--border)" stroke-width="1" fill="none" marker-end="url(#arrow)"/>
+          <path d="M 570 100 L 610 100" stroke="var(--border)" stroke-width="1" fill="none" marker-end="url(#arrow)"/>
+          <path d="M 710 100 L 750 100" stroke="var(--border)" stroke-width="1" fill="none" marker-end="url(#arrow)"/>
+          <path d="M 850 100 L 890 100" stroke="var(--border)" stroke-width="1" fill="none" marker-end="url(#arrow)"/>
+          <path d="M 990 100 L 1030 100" stroke="var(--border)" stroke-width="1" fill="none" marker-end="url(#arrow)" opacity="0.4"/>
+          
+          <!-- Animated tracer -->
+          <circle r="4" fill="var(--accent)" filter="url(#tracerGlow)" opacity="0.9">
+            <animateMotion dur="9s" repeatCount="indefinite">
+              <mpath href="#requestPath"/>
+            </animateMotion>
+          </circle>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Diagram 2: Deployment Pipeline -->
+    <div class="arch-diagram" style="margin-top:72px;">
+      <div class="arch-title">Deployment Pipeline (Reference)</div>
+      <div class="arch-svg-wrapper">
+        <svg class="arch-svg-diagram" viewBox="0 0 1200 220" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="arrow2" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+              <polygon points="0 0, 6 3, 0 6" fill="var(--accent)" opacity="0.5"/>
+            </marker>
+            <filter id="tracerGlow2">
+              <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+              <feMerge>
+                <feMergeNode in="coloredBlur"/>
+                <feMergeNode in="SourceGraphic"/>
+              </feMerge>
+            </filter>
+          </defs>
+          
+          <path id="deployPath" d="M 150 110 L 190 110 M 290 110 L 330 110 M 430 110 L 470 110 M 570 110 L 610 110 M 710 110 L 750 110 M 850 110 L 890 110" fill="none" stroke="none"/>
+          
+          <!-- Security parallel lane (at y=150, aligned with main line) -->
+          <path d="M 380 150 L 520 150" stroke="var(--border)" stroke-width="1" fill="none" marker-end="url(#arrow2)" opacity="0.4" stroke-dasharray="2,2"/>
+          <path d="M 380 110 L 380 150 M 520 150 L 520 110" stroke="var(--border)" stroke-width="1" fill="none" opacity="0.4" stroke-dasharray="2,2"/>
+          
+          <!-- Main nodes (aligned at y=70) -->
+          <g class="arch-node" transform="translate(50, 70)">
+            <rect x="0" y="0" width="100" height="80" rx="3" class="arch-node-box"/>
+            <text x="50" y="30" class="arch-node-title" text-anchor="middle">Repo</text>
+            <text x="50" y="50" class="arch-node-sub" text-anchor="middle">Git</text>
+          </g>
+          
+          <g class="arch-node" transform="translate(190, 70)">
+            <rect x="0" y="0" width="100" height="80" rx="3" class="arch-node-box"/>
+            <text x="50" y="30" class="arch-node-title" text-anchor="middle">CI</text>
+            <text x="50" y="50" class="arch-node-sub" text-anchor="middle">Build + Test</text>
+          </g>
+          
+          <g class="arch-node" transform="translate(330, 70)">
+            <rect x="0" y="0" width="100" height="80" rx="3" class="arch-node-box"/>
+            <text x="50" y="30" class="arch-node-title" text-anchor="middle">Security</text>
+            <text x="50" y="50" class="arch-node-sub" text-anchor="middle">SAST / Scan</text>
+          </g>
+          
+          <g class="arch-node" transform="translate(470, 70)">
+            <rect x="0" y="0" width="100" height="80" rx="3" class="arch-node-box"/>
+            <text x="50" y="30" class="arch-node-title" text-anchor="middle">Registry</text>
+            <text x="50" y="50" class="arch-node-sub" text-anchor="middle">Container</text>
+          </g>
+          
+          <g class="arch-node" transform="translate(610, 70)">
+            <rect x="0" y="0" width="100" height="80" rx="3" class="arch-node-box"/>
+            <text x="50" y="30" class="arch-node-title" text-anchor="middle">GitOps</text>
+            <text x="50" y="50" class="arch-node-sub" text-anchor="middle">ArgoCD</text>
+          </g>
+          
+          <g class="arch-node" transform="translate(750, 70)">
+            <rect x="0" y="0" width="100" height="80" rx="3" class="arch-node-box"/>
+            <text x="50" y="30" class="arch-node-title" text-anchor="middle">Cluster</text>
+            <text x="50" y="50" class="arch-node-sub" text-anchor="middle">Deploy</text>
+          </g>
+          
+          <!-- Observability side -->
+          <g class="arch-node arch-obs" transform="translate(890, 70)">
+            <rect x="0" y="0" width="100" height="80" rx="3" class="arch-node-box"/>
+            <text x="50" y="28" class="arch-node-title arch-obs-title" text-anchor="middle">Observability</text>
+            <text x="50" y="48" class="arch-node-sub arch-obs-sub" text-anchor="middle">Release / Rollback</text>
+          </g>
+          <path d="M 850 110 L 890 110" stroke="var(--border)" stroke-width="1" fill="none" marker-end="url(#arrow2)" opacity="0.4"/>
+          
+          <!-- Connection lines (aligned with main path at y=110) -->
+          <path d="M 150 110 L 190 110" stroke="var(--border)" stroke-width="1" fill="none" marker-end="url(#arrow2)"/>
+          <path d="M 290 110 L 330 110" stroke="var(--border)" stroke-width="1" fill="none" marker-end="url(#arrow2)"/>
+          <path d="M 430 110 L 470 110" stroke="var(--border)" stroke-width="1" fill="none" marker-end="url(#arrow2)"/>
+          <path d="M 570 110 L 610 110" stroke="var(--border)" stroke-width="1" fill="none" marker-end="url(#arrow2)"/>
+          <path d="M 710 110 L 750 110" stroke="var(--border)" stroke-width="1" fill="none" marker-end="url(#arrow2)"/>
+          <path d="M 850 110 L 890 110" stroke="var(--border)" stroke-width="1" fill="none" marker-end="url(#arrow2)" opacity="0.4"/>
+          
+          <!-- Animated tracer -->
+          <circle r="4" fill="var(--accent)" filter="url(#tracerGlow2)" opacity="0.9">
+            <animateMotion dur="8s" repeatCount="indefinite">
+              <mpath href="#deployPath"/>
+            </animateMotion>
+          </circle>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>

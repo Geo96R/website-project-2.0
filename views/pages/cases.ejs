@@ -1,0 +1,211 @@
+<!-- ===== CASE STUDIES ===== -->
+<section id="cases" style="padding-top:80px;">
+  <div class="sh">
+    <div class="si-idx">05</div>
+    <div>
+      <div class="s-tag">Engineering Case Studies</div>
+      <h2 class="s-title">Production Problems.<br>Real Solutions.</h2>
+      <p class="s-desc">Postmortem-format documentation of real incidents. Not portfolio projects. Operational records.</p>
+    </div>
+  </div>
+  <div class="cases">
+
+    <div class="case">
+      <div class="c-side">
+        <div class="c-num">CASE / 001</div>
+        <div class="c-title">High-Volume Referer Spam Mitigation: Layered WAF and CRS Without Blocking Legitimate Crawlers</div>
+        <div class="tags"><span class="tag red">Security</span><span class="tag red">L7 DDoS</span><span class="tag">Cloudflare WAF</span><span class="tag red">ModSecurity</span></div>
+      </div>
+      <div class="c-body">
+        <div class="c-sec">
+          <div class="c-lbl red">Problem</div>
+          <div class="c-txt">A sustained Layer 7 referer spam campaign targeted a production site, reaching high-volume request rates in the attack window. Requests carried rotating user agents and adaptive referer patterns to evade static rules. The site held significant organic search rankings  collateral WAF blocks or origin degradation carried direct SEO risk.</div>
+        </div>
+        <div class="c-sec">
+          <div class="c-lbl">Constraints</div>
+          <div class="c-txt">No maintenance window available. Rules could not block legitimate crawlers (Googlebot, Bingbot). The attack pattern was adaptive  initial static rules were bypassed within hours. NGINX-level blocking risked false positives on shared infrastructure serving unrelated tenants on the same upstream.</div>
+        </div>
+        <div class="c-sec">
+          <div class="c-lbl">Mitigation Layers Applied</div>
+          <div class="c-txt">
+            Deployed in sequence as the attack evolved:<br><br>
+            1. Cloudflare WAF custom expression rules targeting referer pattern signatures<br>
+            2. IP-level rate limiting with burst allowances to preserve legitimate traffic<br>
+            3. Bot Fight Mode enabled; CAPTCHA on unverified bot traffic<br>
+            4. ModSecurity OWASP CRS REQ9000 rule group tuned and activated at origin<br>
+            5. NGINX conditional <code>if ($http_referer ~* "pattern")</code> blocks for persistent offenders<br>
+            6. Progressive rollback of emergency rules as traffic normalized over 72 hours
+          </div>
+        </div>
+        <div class="c-sec">
+          <div class="c-lbl">Trade-offs</div>
+          <div class="c-txt">Bot Fight Mode introduces CAPTCHA friction at the margins of legitimate traffic  accepted during the attack window, rolled back post-incident. REQ9000 rules required audit-mode testing before enforcement to validate no false positives against CMS form submissions on the same origin.</div>
+        </div>
+        <div class="c-outcome">Outcome: Service was unstable at the start of the attack window and required mitigation under pressure. After layered controls were applied, origin stability returned and the environment remained usable while rules were tightened and then cleaned up post-incident.</div>
+      </div>
+    </div>
+
+    <div class="case">
+      <div class="c-side">
+        <div class="c-num">CASE / 002</div>
+        <div class="c-title">ModSecurity OWASP CRS  Production False Positive Remediation</div>
+        <div class="tags"><span class="tag red">Security</span><span class="tag red">ModSecurity</span><span class="tag">OWASP CRS</span><span class="tag amber">WAF Tuning</span></div>
+      </div>
+      <div class="c-body">
+        <div class="c-sec">
+          <div class="c-lbl red">Problem</div>
+          <div class="c-txt">OWASP CRS at Paranoia Level 2 began blocking legitimate admin and form traffic across multiple tenants after deployment. Rules in the REQUEST-941 (XSS) and REQUEST-942 (SQLi) groups were triggering on application-generated parameter patterns structurally similar to attack signatures but valid by the application. Blanket paranoia level reduction was not acceptable  it would reduce detection coverage across the board.</div>
+        </div>
+        <div class="c-sec">
+          <div class="c-lbl">Constraints</div>
+          <div class="c-txt">Production environment  ModSecurity could not be globally disabled. Rule changes had to be applied per-vhost without affecting other tenants. Audit log volume during diagnosis exceeded 500MB/day across the fleet, requiring targeted Loki queries to isolate the specific triggering rule IDs.</div>
+        </div>
+        <div class="c-sec">
+          <div class="c-lbl">Architecture Decision</div>
+          <div class="c-txt">Switched CRS to <code>DetectionOnly</code> on affected vhosts. Queried Loki audit logs via Grafana to identify rule IDs and the exact request paths triggering them. Applied <code>SecRuleRemoveById</code> and <code>SecRuleUpdateTargetById</code> exclusions scoped to affected URL paths  not globally. Validated exclusions against captured production request samples. Re-enabled enforcement per vhost after validation. Paranoia level remained at PL2 throughout.</div>
+        </div>
+        <div class="c-sec">
+          <div class="c-lbl">Trade-offs</div>
+          <div class="c-txt">Path-scoped rule exclusions are operationally more complex than global disables but preserve protection coverage for all other request paths. The exclusion set is documented in Ansible templates  applied consistently on future host provisioning, not a one-off manual fix.</div>
+        </div>
+        <div class="c-outcome">Outcome: False positive rate eliminated on affected paths. Protection coverage maintained at PL2. Exclusion logic version-controlled and deployed fleet-wide via Ansible. Pattern added to new host provisioning checklist.</div>
+      </div>
+    </div>
+
+    <div class="case">
+      <div class="c-side">
+        <div class="c-num">CASE / 003</div>
+        <div class="c-title">AI-Assisted Change Validation  Caught Regression Before Production</div>
+        <div class="tags"><span class="tag">Automation</span><span class="tag">Validation</span><span class="tag amber">AI-Assisted</span><span class="tag">Backup</span></div>
+      </div>
+      <div class="c-body">
+        <div class="c-sec">
+          <div class="c-lbl red">Problem</div>
+          <div class="c-txt">During an effort to optimize backup automation, a change introduced a failure mode where dumps could complete successfully but produce invalid output (e.g., empty/near-empty files).</div>
+        </div>
+        <div class="c-sec">
+          <div class="c-lbl">Constraints</div>
+          <div class="c-txt">Backups must be reliable under production churn, with minimal operational noise and no reliance on "exit code = success".</div>
+        </div>
+        <div class="c-sec">
+          <div class="c-lbl">Architecture Decision</div>
+          <div class="c-txt">Added explicit output validation (size + sanity checks) before any sync/retention step. Introduced a second verification path that checks stored artifacts independently from the job that generated them. AI tooling assisted in drafting and reviewing the change, but every step was validated with real outputs before rollout.</div>
+        </div>
+        <div class="c-sec">
+          <div class="c-lbl">Trade-offs</div>
+          <div class="c-txt">Validation adds marginal execution time per backup, but provides strict guarantees. The independent verification path adds a second scheduled job but ensures separation of failure modes from the primary process.</div>
+        </div>
+        <div class="c-outcome amber">Outcome: The regression was detected immediately in validation, corrected before it could age into a silent failure, and the backup pipeline became strictly "assertion-driven" rather than trust-driven.</div>
+      </div>
+    </div>
+
+    <div class="case">
+      <div class="c-side">
+        <div class="c-num">CASE / 004</div>
+        <div class="c-title">Intermittent Ghost 520s with Site Still Live</div>
+        <div class="tags"><span class="tag red">Security</span><span class="tag red">ModSecurity</span><span class="tag">WAF</span><span class="tag amber">False Positive</span></div>
+      </div>
+      <div class="c-body">
+        <div class="c-sec">
+          <div class="c-lbl red">Problem</div>
+          <div class="c-txt">Intermittent 520 errors appeared in monitoring while the site appeared operational to users. Alerts triggered but user-facing availability metrics showed no degradation.</div>
+        </div>
+        <div class="c-sec">
+          <div class="c-lbl">Constraints</div>
+          <div class="c-txt">Production environment with active traffic. Security posture could not be globally reduced. False positive investigation required correlation across multiple systems without disrupting service.</div>
+        </div>
+        <div class="c-sec">
+          <div class="c-lbl">Architecture Decision</div>
+          <div class="c-txt">Correlated timestamps across WAF logs, ModSecurity audit logs, and upstream error logs. Isolated false-positive caused by a specific decoding/normalization plugin interfering with request handling, leading to upstream crashes (segfault). Removed/disabled that component for the affected site class while keeping protection elsewhere. Added targeted monitoring and alerts for similar patterns.</div>
+        </div>
+        <div class="c-sec">
+          <div class="c-lbl">Trade-offs</div>
+          <div class="c-txt">Removing the problematic plugin component reduces some defense-in-depth coverage for that specific site class, but preserves overall security posture and eliminates the false-positive crash loop. Targeted monitoring compensates by providing early warning for similar issues.</div>
+        </div>
+        <div class="c-outcome">Outcome: 520 errors eliminated, stability improved, security posture preserved. Pattern added to monitoring for early detection of similar issues.</div>
+      </div>
+    </div>
+
+    <div class="case">
+      <div class="c-side">
+        <div class="c-num">CASE / 005</div>
+        <div class="c-title">Ingress-NGINX to Gateway API  Personal Production Migration</div>
+        <div class="tags"><span class="tag blue">Kubernetes</span><span class="tag blue">Contour</span><span class="tag blue">Gateway API</span><span class="tag">cert-manager</span></div>
+      </div>
+      <div class="c-body">
+        <div class="c-sec">
+          <div class="c-lbl">Problem</div>
+          <div class="c-txt">Ingress-NGINX became a long-term risk (maintenance / semantics / deprecation concerns). Routing complexity warranted Gateway API.</div>
+        </div>
+        <div class="c-sec">
+          <div class="c-lbl">Constraints</div>
+          <div class="c-txt">Zero-downtime required, reversible steps at each stage, TLS must keep working throughout migration.</div>
+        </div>
+        <div class="c-sec">
+          <div class="c-lbl">Architecture Decision</div>
+          <div class="c-txt">Introduced Gateway API alongside existing ingress using Contour as the data plane. Migrated route-by-route to HTTPRoute, validating each with <code>--dry-run=server</code> and <code>kubectl diff</code> before applying. cert-manager continued handling TLS throughout. Cutover per route with fast rollback capability.</div>
+        </div>
+        <div class="c-sec">
+          <div class="c-lbl">Trade-offs</div>
+          <div class="c-txt">Staged approach took longer than a maintenance window would have, but ensured zero-downtime and full reversibility. HTTPRoute manifests are more verbose than Ingress objects, but provide clearer routing semantics and long-term stability on a maintained specification.</div>
+        </div>
+        <div class="c-outcome">Outcome: Stable routing semantics, simpler future changes, clean operational model. Migration completed with zero incidents.</div>
+      </div>
+    </div>
+
+    <div class="case">
+      <div class="c-side">
+        <div class="c-num">CASE / 006</div>
+        <div class="c-title">Mystery 503s Only From Corporate Split-Tunnel VPN</div>
+        <div class="tags"><span class="tag">Networking</span><span class="tag amber">Edge</span><span class="tag">TLS</span></div>
+      </div>
+      <div class="c-body">
+        <div class="c-sec">
+          <div class="c-lbl red">Problem</div>
+          <div class="c-txt">A SaaS-style control plane returned intermittent HTTP 503 errors for a single enterprise customer. Mobile and residential paths were clean; failures clustered on weekday mornings and correlated with the customer&apos;s split-tunnel VPN policy.</div>
+        </div>
+        <div class="c-sec">
+          <div class="c-lbl">Constraints</div>
+          <div class="c-txt">No access to end-user laptops. Could not reproduce from the office. Needed evidence before asking the customer to change firewall rules.</div>
+        </div>
+        <div class="c-sec">
+          <div class="c-lbl">Architecture Decision</div>
+          <div class="c-txt">Compared edge request IDs with origin logs and found healthy upstream responses while the edge returned 503. Traced MTU black holes on a specific UDP path used by HTTP/3. Forced HTTP/2 on a dedicated hostname for that tenant and published a one-page runbook describing MTU and QUIC blockers.</div>
+        </div>
+        <div class="c-sec">
+          <div class="c-lbl">Trade-offs</div>
+          <div class="c-txt">Per-tenant protocol knobs add configuration drift unless captured in GitOps. Documented exception with expiry review.</div>
+        </div>
+        <div class="c-outcome amber">Outcome: 503s dropped to zero without a product rewrite. Customer network team adjusted UDP path later; the hostname override stayed as a safety rail.</div>
+      </div>
+    </div>
+
+    <div class="case">
+      <div class="c-side">
+        <div class="c-num">CASE / 007</div>
+        <div class="c-title">GitOps Drift: Argo CD Healthy While Pods Ate a Deprecated API</div>
+        <div class="tags"><span class="tag blue">Kubernetes</span><span class="tag blue">GitOps</span><span class="tag">Upgrades</span></div>
+      </div>
+      <div class="c-body">
+        <div class="c-sec">
+          <div class="c-lbl red">Problem</div>
+          <div class="c-txt">After a control-plane upgrade, workloads still ran, but several controllers stopped reconciling. Argo CD showed green because applications synced; functional tests caught missing sidecars injected by a mutating webhook that silently failed on removed API versions.</div>
+        </div>
+        <div class="c-sec">
+          <div class="c-lbl">Constraints</div>
+          <div class="c-txt">Large mono-repo of Helm charts; no appetite to block all deploys. Needed a signal before the next minor bump.</div>
+        </div>
+        <div class="c-sec">
+          <div class="c-lbl">Architecture Decision</div>
+          <div class="c-txt">Added a CI job running <code>pluto</code> and <code>kubectl diff --server-side</code> against a disposable cluster for every chart bump. Wired a merge gate on deprecated API hits. Patched charts in place and replayed sync waves with canary namespaces.</div>
+        </div>
+        <div class="c-sec">
+          <div class="c-lbl">Trade-offs</div>
+          <div class="c-txt">Disposable clusters cost CI minutes; cheaper than a production incident. Some third-party charts lagged; forked temporarily with upstream issues filed.</div>
+        </div>
+        <div class="c-outcome">Outcome: Deprecated API surface emptied before the next upgrade window. GitOps health now includes pre-sync policy checks, not just git SHA match.</div>
+      </div>
+    </div>
+
+  </div>
+</section>

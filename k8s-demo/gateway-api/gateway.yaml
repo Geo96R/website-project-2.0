@@ -1,0 +1,20 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: contour-gateway
+  namespace: default
+spec:
+  gatewayClassName: contour
+  listeners:
+  - name: http
+    hostname: example.com  # Replace with your domain
+    port: 80
+    protocol: HTTP
+  - name: https
+    hostname: example.com  # Replace with your domain
+    port: 443
+    protocol: HTTPS
+    tls:
+      mode: Terminate
+      certificateRefs:
+      - name: your-tls-secret  # cert-manager will create this

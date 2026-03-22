@@ -1,0 +1,166 @@
+<!-- ===== RESEARCH & INDUSTRY SIGNALS ===== -->
+<section id="research" style="padding-top:80px;">
+  <div class="sh">
+    <div class="si-idx">07</div>
+    <div>
+      <div class="s-tag">Industry Awareness</div>
+      <h2 class="s-title">Research &amp; Industry Signals</h2>
+      <p class="s-desc">Observations on infrastructure trends and operational patterns, including early-2026 signals (Gateway API adoption, supply-chain hardening, platform engineering).</p>
+    </div>
+  </div>
+  <div class="cases">
+    <div class="case">
+      <div class="c-side">
+        <div class="c-num">SIGNAL / A</div>
+        <div class="c-title">AI Crawler Economics</div>
+        <div class="tags"><span class="tag">Edge Policy</span><span class="tag">Traffic Economics</span></div>
+      </div>
+      <div class="c-body">
+        <div class="c-sec">
+          <div class="c-lbl">Trend</div>
+          <div class="c-txt">Automated traffic from AI crawlers and indexing services now rivals or exceeds human traffic in many production environments. This shift changes the economic model of edge infrastructure.</div>
+        </div>
+        <div class="c-sec">
+          <div class="c-lbl">Implication</div>
+          <div class="c-txt">Edge policy decisions are becoming economic, not just security-focused. Simple block/allow models are insufficient. Policy-driven traffic governance that considers cost, rate limits, and access tiers is replacing reactive approaches.</div>
+        </div>
+        <div class="c-sec">
+          <div class="c-lbl">Pattern</div>
+          <div class="c-txt">Monetization models around pay-per-crawl and tiered access are emerging. Infrastructure operators need to design for traffic classification, rate limiting with economic thresholds, and policy engines that can adapt to changing crawler behavior patterns.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="case">
+      <div class="c-side">
+        <div class="c-num">SIGNAL / B</div>
+        <div class="c-title">Bot Traffic &amp; Operational Pressure</div>
+        <div class="tags"><span class="tag red">Security</span><span class="tag">Cost Management</span></div>
+      </div>
+      <div class="c-body">
+        <div class="c-sec">
+          <div class="c-lbl">Trend</div>
+          <div class="c-txt">Increasing automated traffic changes infrastructure cost structures. Origin compute and bandwidth costs scale with bot volume, not just legitimate user traffic.</div>
+        </div>
+        <div class="c-sec">
+          <div class="c-lbl">Implication</div>
+          <div class="c-txt">Telemetry and anomaly detection at the edge is becoming critical. Reactive security measures are insufficient. WAF and rate limiting must be layered and policy-driven, not just rule-based.</div>
+        </div>
+        <div class="c-sec">
+          <div class="c-lbl">Pattern</div>
+          <div class="c-txt">Operational pressure requires edge filtering before origin processing. Multi-layer defenses with economic thresholds, behavioral analysis, and adaptive policies reduce origin load while maintaining legitimate access.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="case">
+      <div class="c-side">
+        <div class="c-num">SIGNAL / C</div>
+        <div class="c-title">Privacy &amp; Data Residency</div>
+        <div class="tags"><span class="tag">Compliance</span><span class="tag">Architecture</span></div>
+      </div>
+      <div class="c-body">
+        <div class="c-sec">
+          <div class="c-lbl">Trend</div>
+          <div class="c-txt">Regulatory pressure on data residency and privacy is increasing globally. Architecture choices now directly affect legal posture and compliance requirements.</div>
+        </div>
+        <div class="c-sec">
+          <div class="c-lbl">Implication</div>
+          <div class="c-txt">First-party analytics and controlled data paths are becoming strategic, not optional. Third-party tracking dependencies create compliance risk. Infrastructure must support data isolation and residency controls.</div>
+        </div>
+        <div class="c-sec">
+          <div class="c-lbl">Pattern</div>
+          <div class="c-txt">Architecture decisions around data flow, storage location, and third-party integrations require upfront consideration of regulatory constraints. Self-hosted analytics and controlled data pipelines reduce compliance surface area.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="case">
+      <div class="c-side">
+        <div class="c-num">SIGNAL / D</div>
+        <div class="c-title">Server-Side Measurement Shift</div>
+        <div class="tags"><span class="tag">Observability</span><span class="tag">Reliability</span></div>
+      </div>
+      <div class="c-body">
+        <div class="c-sec">
+          <div class="c-lbl">Trend</div>
+          <div class="c-txt">Client-side tracking tags are fragile. Ad blockers, privacy tools, and browser policies increasingly break client-side measurement pipelines.</div>
+        </div>
+        <div class="c-sec">
+          <div class="c-lbl">Implication</div>
+          <div class="c-txt">Server-side measurement pipelines require real infrastructure discipline. Observability and isolation matter more than just "tracking working." Data quality depends on reliable server-side collection.</div>
+        </div>
+        <div class="c-sec">
+          <div class="c-lbl">Pattern</div>
+          <div class="c-txt">Server-side analytics infrastructure needs proper isolation, queueing, and failure handling. Measurement becomes an infrastructure concern, not just a front-end integration. Reliability patterns from application infrastructure apply to analytics pipelines.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="case">
+      <div class="c-side">
+        <div class="c-num">SIGNAL / E</div>
+        <div class="c-title">Gateway API as the Default North Star (Early 2026)</div>
+        <div class="tags"><span class="tag blue">Kubernetes</span><span class="tag">Ingress</span><span class="tag">GitOps</span></div>
+      </div>
+      <div class="c-body">
+        <div class="c-sec">
+          <div class="c-lbl">Trend</div>
+          <div class="c-txt">Across the ecosystem, Gateway API is now the recommended path for new clusters and for teams replacing aging Ingress semantics. AWS Load Balancer Controller has shipped general availability support for Gateway API resources, and major meshes and ingress implementations continue to align on HTTPRoute and GatewayClass as portable contracts.</div>
+        </div>
+        <div class="c-sec">
+          <div class="c-lbl">Implication</div>
+          <div class="c-txt">Platform teams own GatewayClass and shared Gateways; application teams ship HTTPRoutes. That split matches how real organizations want RBAC and blast-radius control. DevOps work shifts toward CRD lifecycle, controller upgrades, and compatibility matrices across Gateway API versions.</div>
+        </div>
+        <div class="c-sec">
+          <div class="c-lbl">Pattern</div>
+          <div class="c-txt">Treat Gateway API like any other critical platform CRD: pin versions, test upgrades in a shadow controller, and manage routes through GitOps (for example Argo CD) with the same review and diff discipline as Deployments. Reference: <a href="https://aws.amazon.com/blogs/networking-and-content-delivery/aws-load-balancer-controller-adds-general-availability-support-for-kubernetes-gateway-api/" rel="noopener noreferrer">AWS LB Controller GA for Gateway API</a>.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="case">
+      <div class="c-side">
+        <div class="c-num">SIGNAL / F</div>
+        <div class="c-title">Supply Chain: From &ldquo;Scan the Image&rdquo; to Provenance</div>
+        <div class="tags"><span class="tag red">Security</span><span class="tag">CI/CD</span><span class="tag">Policy</span></div>
+      </div>
+      <div class="c-body">
+        <div class="c-sec">
+          <div class="c-lbl">Trend</div>
+          <div class="c-txt">CNCF TAG Security and the wider industry keep pushing supply-chain guidance from vulnerability scanning alone toward attestations, SBOMs, and admission-time enforcement. In practice that means signing builds in CI, storing SPDX or CycloneDX SBOMs next to artifacts, and having the cluster reject workloads that fail policy.</div>
+        </div>
+        <div class="c-sec">
+          <div class="c-lbl">Implication</div>
+          <div class="c-txt">DevOps owns the glue: OIDC from CI to Sigstore (or equivalent), Kyverno or OPA/Gatekeeper rules that require digest pulls and valid signatures, and traceability from Git SHA to running image. Security becomes a pipeline and cluster contract, not a quarterly audit.</div>
+        </div>
+        <div class="c-sec">
+          <div class="c-lbl">Pattern</div>
+          <div class="c-txt">Start with SBOM generation on every release artifact, then add signing, then tighten admission. Align with <a href="https://tag-security.cncf.io/blog/software-supply-chain-security-best-practices-v2" rel="noopener noreferrer">TAG Security supply-chain best practices v2</a> and treat SLSA levels as a roadmap, not a one-shot checkbox.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="case">
+      <div class="c-side">
+        <div class="c-num">SIGNAL / G</div>
+        <div class="c-title">Platform Engineering vs Raw Kubernetes (March 2026)</div>
+        <div class="tags"><span class="tag">Platform</span><span class="tag">Developer Experience</span></div>
+      </div>
+      <div class="c-body">
+        <div class="c-sec">
+          <div class="c-lbl">Trend</div>
+          <div class="c-txt">Internal developer platforms (IDPs) and golden paths are no longer optional at mid-size and up: teams want self-service namespaces, paved-road templates, and observability defaults without reading the entire CNCF landscape.</div>
+        </div>
+        <div class="c-sec">
+          <div class="c-lbl">Implication</div>
+          <div class="c-txt">Senior DevOps roles increasingly blend SRE, product thinking, and cost ownership. Success is measured by lead time and mean time to restore, not how many raw YAML files developers touch.</div>
+        </div>
+        <div class="c-sec">
+          <div class="c-lbl">Pattern</div>
+          <div class="c-txt">Invest in thin, opinionated wrappers (scaffolding, policy bundles, standard Helm umbrella charts) and document the escape hatches. Platform work that cannot be explained on one page does not ship.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

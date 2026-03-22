@@ -1,0 +1,42 @@
+[
+  {
+    "id": "001",
+    "category": "Security",
+    "title": "High-volume referer spam mitigation: layering WAF and ModSecurity OWASP CRS without blocking legitimate crawlers"
+  },
+  {
+    "id": "002",
+    "category": "Security",
+    "title": "OWASP CRS in production: path-scoped rule exclusions, paranoia level calibration, and audit-mode validation before enforcement"
+  },
+  {
+    "id": "003",
+    "category": "Containers",
+    "title": "High-density container environments: resource tiering, density limits, and failure patterns under sustained load"
+  },
+  {
+    "id": "004",
+    "category": "Automation",
+    "title": "Why your backup script exits 0 and still fails silently  assertion-based validation for database backup pipelines at scale"
+  },
+  {
+    "id": "005",
+    "category": "Kubernetes",
+    "title": "Migrating Ingress NGINX to Gateway API without a maintenance window  a namespace-by-namespace approach"
+  },
+  {
+    "id": "006",
+    "category": "Observability",
+    "title": "Prometheus + Grafana + Loki for high-density Docker environments: what the default dashboards miss"
+  },
+  {
+    "id": "007",
+    "category": "Platform",
+    "title": "Golden paths that actually get used: shrinking the platform catalog to three blessed workflows"
+  },
+  {
+    "id": "008",
+    "category": "CI/CD",
+    "title": "Why your container scan is green while the build is still untrusted: wiring SBOMs, signatures, and admission in order"
+  }
+]

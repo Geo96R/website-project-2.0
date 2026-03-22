@@ -1,0 +1,73 @@
+<!-- ===== BLOG ===== -->
+<section id="blog" style="padding-top:80px;">
+  <div class="sh">
+    <div class="si-idx">06</div>
+    <div>
+      <div class="s-tag">Technical Writing</div>
+      <h2 class="s-title">Operator Knowledge,<br>Made Transferable</h2>
+      <p class="s-desc">Written from production incidents and architectural decisions, grounded in careful documentation review and industry-proven architectural patterns.</p>
+    </div>
+  </div>
+  <div class="blog-list">
+    <% blogPosts.forEach(function(post, index) { %>
+    <button type="button" class="blog-item" data-blog-index="<%= index %>">
+      <div class="b-meta"><span class="b-n"><%= post.id %></span><span class="b-cat"><%= post.category %></span></div>
+      <div class="b-title"><%= post.title %></div>
+      <div class="b-arr">→</div>
+    </button>
+    <div class="blog-content" data-blog-content="<%= index %>">
+      <div class="blog-content-inner">
+        <% if (post.id === '001') { %>
+        <div class="b-sec"><div class="b-lbl">Pattern</div><div class="b-txt">High-volume referer spam campaigns observed in production environments can overwhelm origin infrastructure while evading simple rate limits through adaptive patterns and rotating user agents.</div></div>
+        <div class="b-sec"><div class="b-lbl">Failure mode</div><div class="b-txt">Blocking legitimate crawlers damages SEO. Overly aggressive rules create false positives. Static rules are bypassed quickly by adaptive attacks. Origin infrastructure degrades under sustained load.</div></div>
+        <div class="b-sec"><div class="b-lbl">Architectural reasoning</div><div class="b-txt">Layered defenses reduce single points of failure. Edge WAF expression rules handle pattern signatures before origin processing. IP-level rate limiting with burst allowances preserves legitimate traffic. Bot verification for unverified traffic adds another layer. Origin-level CRS with path-scoped exclusions provides defense-in-depth.</div></div>
+        <div class="b-sec"><div class="b-lbl">Trade-offs</div><div class="b-txt">Edge rules reduce origin load but require edge platform capabilities. Bot verification introduces latency for unverified traffic. CRS tuning requires audit-mode validation to prevent false positives. Multiple layers increase operational complexity but improve resilience.</div></div>
+        <div class="b-sec"><div class="b-lbl">Implementation pattern</div><div class="b-txt">Deploy edge rules first to reduce origin load. Enable origin CRS in detection-only mode, analyze audit logs to identify false positives, apply path-scoped exclusions, then enable enforcement. Progressive rollback of emergency rules as traffic normalizes. Rules derived from observed traffic patterns, not generic templates.</div></div>
+        <% } else if (post.id === '002') { %>
+        <div class="b-sec"><div class="b-lbl">Pattern</div><div class="b-txt">OWASP CRS at higher paranoia levels, when applied in production environments, can block legitimate application traffic due to structural similarities between valid parameters and attack signatures.</div></div>
+        <div class="b-sec"><div class="b-lbl">Failure mode</div><div class="b-txt">Blanket paranoia reduction reduces protection coverage. Global rule disables create security gaps. Production environments cannot tolerate widespread false positives that break legitimate functionality.</div></div>
+        <div class="b-sec"><div class="b-lbl">Architectural reasoning</div><div class="b-txt">Path-scoped exclusions preserve protection coverage while eliminating false positives. Detection-only mode enables validation before enforcement. Rule-level granularity allows surgical adjustments without reducing overall security posture.</div></div>
+        <div class="b-sec"><div class="b-lbl">Trade-offs</div><div class="b-txt">Path-scoped exclusions require maintenance and version control. Detection-only mode delays protection but enables validation. Rule-level tuning increases operational complexity but improves precision.</div></div>
+        <div class="b-sec"><div class="b-lbl">Implementation pattern</div><div class="b-txt">Switch to detection-only mode on affected vhosts. Query audit logs to identify specific rule IDs and request paths. Apply path-scoped exclusions using SecRuleRemoveById and SecRuleUpdateTargetById. Validate against captured production request samples before re-enabling enforcement. Exclusion logic version-controlled and applied consistently.</div></div>
+        <% } else if (post.id === '003') { %>
+        <div class="b-sec"><div class="b-lbl">Pattern</div><div class="b-txt">High container density on single hosts, observed in production environments, can lead to resource contention and cascading failures when all containers use identical resource templates regardless of traffic patterns.</div></div>
+        <div class="b-sec"><div class="b-lbl">Failure mode</div><div class="b-txt">Flat resource allocation wastes capacity on idle containers while starving active ones. Container restarts cause full-fleet outages. Resource contention triggers cascading failures. Staging environments rarely match production density for testing.</div></div>
+        <div class="b-sec"><div class="b-lbl">Architectural reasoning</div><div class="b-txt">Resource tiering based on actual usage patterns increases effective capacity. Traffic-based classification enables right-sizing. On-demand process managers for idle containers reclaim resources. Rolling batch changes prevent full-fleet restarts.</div></div>
+        <div class="b-sec"><div class="b-lbl">Trade-offs</div><div class="b-txt">Tiered configurations increase operational complexity. Classification requires monitoring and analysis. On-demand managers add latency for cold starts. Rolling changes take longer but reduce risk.</div></div>
+        <div class="b-sec"><div class="b-lbl">Implementation pattern</div><div class="b-txt">Analyze request volume per container, classify into tiers (high/medium/low/idle), generate tiered configuration templates, deploy via automation with reload capabilities, move idle containers to ondemand mode, monitor for saturation reduction. Changes reversible and applied incrementally.</div></div>
+        <% } else if (post.id === '004') { %>
+        <div class="b-sec"><div class="b-lbl">Pattern</div><div class="b-txt">Backup automation pipelines observed in production can silently fail when scripts exit successfully but produce invalid output, creating gaps that are only discovered during restore attempts.</div></div>
+        <div class="b-sec"><div class="b-lbl">Failure mode</div><div class="b-txt">Exit code zero does not guarantee valid output. Silent failures compound over time. Restore failures discovered too late result in data loss. Trust-based workflows fail without validation.</div></div>
+        <div class="b-sec"><div class="b-lbl">Architectural reasoning</div><div class="b-txt">Assertion-based validation catches failures immediately. Independent verification paths ensure separation of failure modes from primary processes. Output validation before retention prevents invalid data from being stored. Multiple validation checkpoints reduce single points of failure.</div></div>
+        <div class="b-sec"><div class="b-lbl">Trade-offs</div><div class="b-txt">Validation adds latency and complexity. Independent verification requires additional infrastructure. Multiple checkpoints increase operational overhead but improve reliability.</div></div>
+        <div class="b-sec"><div class="b-lbl">Implementation pattern</div><div class="b-txt">Post-dump validation checks file size and basic integrity. Transfer operations validate source path and file size before sync. Independent audit jobs verify stored artifacts out-of-band. Any validation failure triggers non-zero exit and alert. Assertion-based validation rather than trust-based workflows.</div></div>
+        <% } else if (post.id === '005') { %>
+        <div class="b-sec"><div class="b-lbl">Pattern</div><div class="b-txt">Legacy Ingress controllers face deprecation risks in Kubernetes environments. Routing semantics can change between versions, creating inconsistencies that silently misroute traffic.</div></div>
+        <div class="b-sec"><div class="b-lbl">Failure mode</div><div class="b-txt">Maintenance windows are not always available. Routing changes can affect multiple namespaces. TLS provisioning must remain functional throughout migration. Big-bang migrations risk service disruption.</div></div>
+        <div class="b-sec"><div class="b-lbl">Architectural reasoning</div><div class="b-txt">Staged migrations with per-namespace reversibility enable zero-downtime transitions. HTTPRoute provides clearer routing semantics and long-term stability on maintained specifications. Dual controllers maintain service availability during migration.</div></div>
+        <div class="b-sec"><div class="b-lbl">Trade-offs</div><div class="b-txt">Staged migrations take longer but reduce risk. Dual controllers increase resource usage temporarily. Route-by-route migration requires careful coordination but enables rollback per namespace.</div></div>
+        <div class="b-sec"><div class="b-lbl">Implementation pattern</div><div class="b-txt">Deploy Gateway API controller with separate GatewayClass (no traffic impact). Convert Ingress to HTTPRoute namespace-by-namespace. Use kubectl diff and --dry-run=server for validation. Update cert-manager to use new IngressClass annotation. DNS cutover per service with fast rollback capability. Maintain dual controllers until migration is stable.</div></div>
+        <% } else if (post.id === '006') { %>
+        <div class="b-sec"><div class="b-lbl">Pattern</div><div class="b-txt">Default monitoring dashboards in high-density container environments often miss critical metrics where per-container granularity is essential but aggregation can hide issues.</div></div>
+        <div class="b-sec"><div class="b-lbl">Failure mode</div><div class="b-txt">Container-level failures can cascade before host-level metrics show problems. Default dashboards aggregate too much. Log correlation across hosts requires proper tooling. Relying solely on host-level metrics misses container-specific issues.</div></div>
+        <div class="b-sec"><div class="b-lbl">Architectural reasoning</div><div class="b-txt">Per-container visibility is essential at high density. Custom dashboards tailored to environment-specific patterns surface issues that default views miss. Log correlation enables root cause analysis across distributed systems. Metrics and logs must be correlated via shared labels.</div></div>
+        <div class="b-sec"><div class="b-lbl">Trade-offs</div><div class="b-txt">Per-container metrics increase storage and query load. Custom dashboards require maintenance. Log aggregation adds infrastructure complexity but improves observability.</div></div>
+        <div class="b-sec"><div class="b-lbl">Implementation pattern</div><div class="b-txt">Deploy cAdvisor for per-container metrics. Use Node Exporter for host-level context. Configure Prometheus to scrape both. Build custom Grafana dashboards for container-dense environments with alerts on saturation thresholds. Set up Loki for log aggregation with label-based filtering. Correlate metrics with logs via shared labels.</div></div>
+        <% } else if (post.id === '007') { %>
+        <div class="b-sec"><div class="b-lbl">Pattern</div><div class="b-txt">Internal platforms that list fifteen tools and zero opinions see slow adoption. Developers route around the catalog and SSH credentials leak back into Slack threads.</div></div>
+        <div class="b-sec"><div class="b-lbl">Failure mode</div><div class="b-txt">Shadow clusters, duplicate CI jobs, and &ldquo;temporary&rdquo; admin roles become permanent. The platform team measures success by CRDs installed instead of deployments shipped.</div></div>
+        <div class="b-sec"><div class="b-lbl">Architectural reasoning</div><div class="b-txt">Pick three blessed flows (for example: stateless API, batch worker, static site) with batteries-included logging, ingress, and secrets. Everything else is an explicit exception with a design note.</div></div>
+        <div class="b-sec"><div class="b-lbl">Trade-offs</div><div class="b-txt">Opinionated paths frustrate edge cases until escape hatches are documented. Saying no is part of the product.</div></div>
+        <div class="b-sec"><div class="b-lbl">Implementation pattern</div><div class="b-txt">Ship a cookiecutter or Backstage template per path, wire default NetworkPolicies and PodSecurity standards, and delete unused tiles from the portal quarterly. If a workflow has no owner on call, it is not golden.</div></div>
+        <% } else if (post.id === '008') { %>
+        <div class="b-sec"><div class="b-lbl">Pattern</div><div class="b-txt">Teams bolt on Trivy in CI, celebrate zero CRITICAL findings, and still cannot answer who built the artifact running in prod.</div></div>
+        <div class="b-sec"><div class="b-lbl">Failure mode</div><div class="b-txt">Unsigned images, mutable tags, and replayed pipelines erode trust. Admission controllers either block nothing or block everything after one bad Friday deploy.</div></div>
+        <div class="b-sec"><div class="b-lbl">Architectural reasoning</div><div class="b-txt">Ordering matters: generate SBOMs first, attach signatures from CI with OIDC, store attestations beside the digest, then teach Kyverno or Gatekeeper to require digest pulls plus valid signature for the workload identity.</div></div>
+        <div class="b-sec"><div class="b-lbl">Trade-offs</div><div class="b-txt">Cold start latency in CI and occasional keyless outage windows. Policy exceptions must be time-bounded and audited.</div></div>
+        <div class="b-sec"><div class="b-lbl">Implementation pattern</div><div class="b-txt">Block <code>:latest</code> in prod namespaces, require image digest in manifests, and map each running digest to a Git SHA in your deploy system. Run table-top exercises for &ldquo;compromised build account&rdquo; twice a year.</div></div>
+        <% } %>
+      </div>
+    </div>
+    <% }); %>
+  </div>
+</section>

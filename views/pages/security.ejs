@@ -1,0 +1,51 @@
+<!-- ===== SECURITY ===== -->
+<section id="security" style="padding-top:80px;">
+  <div class="sh">
+    <div class="si-idx">02</div>
+    <div>
+      <div class="s-tag">Security Operations</div>
+      <h2 class="s-title">Layered Security.<br>Production-Tuned Controls.</h2>
+      <p class="s-desc">
+        Security is operational discipline, not a configuration checklist. This environment
+        handles high-volume traffic with edge protection and origin security controls
+        filtered at the edge. WAF rules are derived from observed production traffic patterns, not generic templates.
+      </p>
+    </div>
+  </div>
+
+  <div class="panel-grid g3">
+    <div class="panel">
+      <div class="p-badge">Edge Layer</div>
+      <div class="p-title">Cloudflare WAF + Bot Management</div>
+      <div class="p-body">
+        Custom WAF expression rules targeting referer spam, L7 flood patterns, and
+        credential stuffing. Rate limiting per IP and per path with burst allowances
+        tuned to preserve legitimate crawler access. Bot Fight Mode and CAPTCHA challenges
+        deployed selectively. Rules written from live attack data and progressively
+        cleaned up after traffic normalizes  no permanent emergency state.
+      </div>
+    </div>
+    <div class="panel">
+      <div class="p-badge">Origin Layer</div>
+      <div class="p-title">ModSecurity OWASP CRS Tuning</div>
+      <div class="p-body">
+        OWASP CRS deployed on production NGINX hosts. Paranoia level calibrated per
+        environment. Rule IDs adjusted for application-specific false positive patterns
+        using <code style="color:var(--amber)">SecRuleRemoveById</code> scoped to
+        affected URL paths  not globally disabled. CRS tuning applied in audit
+        mode first, then enforcement, validated against captured production request samples.
+      </div>
+    </div>
+    <div class="panel">
+      <div class="p-badge">AI Integration</div>
+      <div class="p-title">AI-Assisted Ops &amp; Application Deployment</div>
+      <div class="p-body">
+        AI tooling integrated into the operations workflow for log pattern analysis,
+        anomaly triage, and automation script generation. Experience deploying
+        AI-backed applications  including Supabase-authenticated services with
+        vector storage, API gateway integration, and user session management in
+        containerized environments.
+      </div>
+    </div>
+  </div>
+</section>
