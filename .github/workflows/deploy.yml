@@ -71,23 +71,12 @@ jobs:
 
   deploy-to-k3s:
     needs: build-and-push
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, k3s]
     if: github.ref == 'refs/heads/main' && github.event_name == 'push' && needs.build-and-push.result == 'success'
     
     steps:
-    - name: Setup kubectl
-      uses: azure/setup-kubectl@v3
-      with:
-        version: 'latest'
-    
     - name: Deploy to K3s
-      env:
-        KUBE_CONFIG: ${{ secrets.KUBECONFIG }}
       run: |
-        echo "Deploying to production"
-        echo "Image: ${{ env.IMAGE }}:latest"
-        echo "$KUBE_CONFIG" | base64 -di > /tmp/kubeconfig
-        chmod 600 /tmp/kubeconfig
-        export KUBECONFIG=/tmp/kubeconfig
+        echo "Deploying ${{ env.IMAGE }}:latest"
         kubectl rollout restart deployment/website-project
         kubectl rollout status deployment/website-project --timeout=300s
