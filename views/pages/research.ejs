@@ -5,7 +5,7 @@
     <div>
       <div class="s-tag">Industry Awareness</div>
       <h2 class="s-title">Research &amp; Industry Signals</h2>
-      <p class="s-desc">Observations on infrastructure trends and operational patterns, including early-2026 signals (Gateway API adoption, supply-chain hardening, platform engineering).</p>
+      <p class="s-desc">Observations on infrastructure trends and operational patterns, including early-2026 signals (Gateway API adoption, supply-chain hardening, platform engineering, AI-assisted code review).</p>
     </div>
   </div>
   <div class="cases">
@@ -159,6 +159,72 @@
         <div class="c-sec">
           <div class="c-lbl">Pattern</div>
           <div class="c-txt">Invest in thin, opinionated wrappers (scaffolding, policy bundles, standard Helm umbrella charts) and document the escape hatches. Platform work that cannot be explained on one page does not ship.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="case">
+      <div class="c-side">
+        <div class="c-num">SIGNAL / H</div>
+        <div class="c-title">AI-Assisted Patches vs Maintainer Bar (Early 2026)</div>
+        <div class="tags"><span class="tag">Quality</span><span class="tag">Process</span></div>
+      </div>
+      <div class="c-body">
+        <div class="c-sec">
+          <div class="c-lbl">Trend</div>
+          <div class="c-txt">Benchmarks like SWE-bench show models closing the loop on small fixes, but downstream studies note that many changes that pass automated checks would still be declined in real projects (style, risk, incomplete tests, or mismatch with project norms).</div>
+        </div>
+        <div class="c-sec">
+          <div class="c-lbl">Implication</div>
+          <div class="c-txt">CI green is not the same as mergeable. Teams need human review, contribution guides tuned for generated patches, and policies for when automation may open PRs at all.</div>
+        </div>
+        <div class="c-sec">
+          <div class="c-lbl">Pattern</div>
+          <div class="c-txt">Treat AI output as untrusted input: require the same tests, security review, and ownership model as junior-authored diffs. Measure value by merged commits and incident rate, not by PR volume.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="case">
+      <div class="c-side">
+        <div class="c-num">SIGNAL / I</div>
+        <div class="c-title">Policy Engines at Scale: CEL and Kafka ACLs</div>
+        <div class="tags"><span class="tag">Data</span><span class="tag">Platform</span></div>
+      </div>
+      <div class="c-body">
+        <div class="c-sec">
+          <div class="c-lbl">Trend</div>
+          <div class="c-txt">Large shops are replacing sprawling permission matrices with smaller rule sets expressed in Common Expression Language (CEL), including access paths that used to require thousands of static ACL rows.</div>
+        </div>
+        <div class="c-sec">
+          <div class="c-lbl">Implication</div>
+          <div class="c-txt">Operational load shifts from spreadsheet edits to engineering: you need safe evaluation, versioning, audit logs, and tests for policy changes, the same way you treat infrastructure code.</div>
+        </div>
+        <div class="c-sec">
+          <div class="c-lbl">Pattern</div>
+          <div class="c-txt">Start from a minimal allow model, encode rules as data with clear owners, and wire CI validation so a bad expression cannot reach prod. Pair with observability on denials to catch drift early.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="case">
+      <div class="c-side">
+        <div class="c-num">SIGNAL / J</div>
+        <div class="c-title">CI/CD Tooling, Supply Chain, and Performance Headlines</div>
+        <div class="tags"><span class="tag red">Security</span><span class="tag">Performance</span><span class="tag">Open Source</span></div>
+      </div>
+      <div class="c-body">
+        <div class="c-sec">
+          <div class="c-lbl">Trend</div>
+          <div class="c-txt">Recent public write-ups highlight creative abuse of issue trackers and workflows around package publishing, plus strong results from rewriting hot batch paths in Rust and from database-specific top-K optimizations (orders-of-magnitude speedups when the query plan matches the hardware).</div>
+        </div>
+        <div class="c-sec">
+          <div class="c-lbl">Implication</div>
+          <div class="c-txt">Dependencies are not only npm modules; they are tokens, bots, and third-party actions. Performance work returns when you profile end-to-end and fix the actual bottleneck instead of micro-optimizing the wrong tier.</div>
+        </div>
+        <div class="c-sec">
+          <div class="c-lbl">Pattern</div>
+          <div class="c-txt">Harden CI entry points (issues, comments, forks), run workflow tests locally where possible, and keep an eye on emerging OSS around Terraform governance, Actions debugging in containers, and runtime guardrails for autonomous agents in your environment.</div>
         </div>
       </div>
     </div>

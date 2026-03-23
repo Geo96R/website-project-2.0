@@ -158,16 +158,6 @@
             </filter>
           </defs>
           
-          <!-- Continuous tracer path (rendered behind boxes so the solid fills hide it inside nodes) -->
-          <path id="requestPath" d="M 50 100 L 1130 100" fill="none" stroke="none"/>
-
-          <!-- Animated tracer (drawn first so nodes paint over it) -->
-          <circle r="4" fill="var(--accent)" filter="url(#tracerGlow)" opacity="0.9">
-            <animateMotion dur="9s" repeatCount="indefinite">
-              <mpath href="#requestPath"/>
-            </animateMotion>
-          </circle>
-
           <!-- Connection arrows -->
           <path d="M 150 100 L 190 100" stroke="var(--border)" stroke-width="1" fill="none" marker-end="url(#arrow)"/>
           <path d="M 290 100 L 330 100" stroke="var(--border)" stroke-width="1" fill="none" marker-end="url(#arrow)"/>
@@ -225,6 +215,7 @@
             <text x="50" y="28" class="arch-node-title arch-obs-title" text-anchor="middle">Observability</text>
             <text x="50" y="48" class="arch-node-sub arch-obs-sub" text-anchor="middle">Logs / Metrics</text>
           </g>
+          <circle id="reqTracer" r="4" fill="var(--accent)" filter="url(#tracerGlow)" opacity="0" cx="0" cy="100"/>
         </svg>
       </div>
     </div>
@@ -233,7 +224,7 @@
     <div class="arch-diagram" style="margin-top:72px;">
       <div class="arch-title">Deployment Pipeline (Reference)</div>
       <div class="arch-svg-wrapper">
-        <svg class="arch-svg-diagram" viewBox="0 0 1200 220" xmlns="http://www.w3.org/2000/svg">
+        <svg id="deployFlowSvg" class="arch-svg-diagram" viewBox="0 0 1200 220" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <marker id="arrow2" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
               <polygon points="0 0, 6 3, 0 6" fill="var(--accent)" opacity="0.5"/>
@@ -247,16 +238,6 @@
             </filter>
           </defs>
           
-          <!-- Continuous tracer path (rendered behind boxes) -->
-          <path id="deployPath" d="M 50 110 L 990 110" fill="none" stroke="none"/>
-
-          <!-- Animated tracer (drawn first so nodes paint over it) -->
-          <circle r="4" fill="var(--accent)" filter="url(#tracerGlow2)" opacity="0.9">
-            <animateMotion dur="8s" repeatCount="indefinite">
-              <mpath href="#deployPath"/>
-            </animateMotion>
-          </circle>
-
           <!-- Security parallel lane -->
           <path d="M 380 150 L 520 150" stroke="var(--border)" stroke-width="1" fill="none" marker-end="url(#arrow2)" opacity="0.4" stroke-dasharray="2,2"/>
           <path d="M 380 110 L 380 150 M 520 150 L 520 110" stroke="var(--border)" stroke-width="1" fill="none" opacity="0.4" stroke-dasharray="2,2"/>
@@ -311,8 +292,60 @@
             <text x="50" y="28" class="arch-node-title arch-obs-title" text-anchor="middle">Observability</text>
             <text x="50" y="48" class="arch-node-sub arch-obs-sub" text-anchor="middle">Release / Rollback</text>
           </g>
+          <circle id="deployTracer" r="4" fill="var(--accent)" filter="url(#tracerGlow2)" opacity="0" cx="0" cy="110"/>
         </svg>
       </div>
     </div>
   </div>
+<script>
+(function () {
+  function animateTracer(tracerId, arrows, y, startDelayMs) {
+    const el = document.getElementById(tracerId);
+    if (!el) return;
+
+    let seg = 0, t = 0, waiting = false, waitFrames = 0;
+    const WAIT  = 24;
+    const SPEED = 0.028;
+
+    const ease = function (u) { return u < 0.5 ? 2 * u * u : -1 + (4 - 2 * u) * u; };
+
+    function frame() {
+      if (waiting) {
+        if (--waitFrames <= 0) {
+          waiting = false;
+          seg = (seg + 1) % arrows.length;
+          t = 0;
+        }
+        el.setAttribute('opacity', 0);
+      } else {
+        t = Math.min(t + SPEED, 1);
+        const pair = arrows[seg];
+        const x1 = pair[0], x2 = pair[1];
+        const x = x1 + (x2 - x1) * ease(t);
+
+        const alpha = t < 0.2 ? t / 0.2 : t > 0.8 ? (1 - t) / 0.2 : 1;
+
+        el.setAttribute('cx', x);
+        el.setAttribute('cy', y);
+        el.setAttribute('opacity', String(alpha * 0.9));
+
+        if (t >= 1) { waiting = true; waitFrames = WAIT; }
+      }
+      requestAnimationFrame(frame);
+    }
+
+    setTimeout(frame, startDelayMs);
+  }
+
+  animateTracer('reqTracer', [
+    [150, 190], [290, 330], [430, 470],
+    [570, 610], [710, 750], [850, 890], [990, 1030]
+  ], 100, 0);
+
+  animateTracer('deployTracer', [
+    [150, 190], [290, 330], [430, 470],
+    [570, 610], [710, 750], [850, 890]
+  ], 110, 1600);
+})();
+</script>
 </section>

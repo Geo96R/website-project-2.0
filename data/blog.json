@@ -38,5 +38,15 @@
     "id": "008",
     "category": "CI/CD",
     "title": "Why your container scan is green while the build is still untrusted: wiring SBOMs, signatures, and admission in order"
+  },
+  {
+    "id": "009",
+    "category": "Security",
+    "title": "When CI becomes the blast radius: automated abuse of GitHub Actions and compromised release pipelines"
+  },
+  {
+    "id": "010",
+    "category": "Kubernetes",
+    "title": "Ingress2Gateway 1.0: a calmer path from Ingress to Gateway API"
   }
 ]
