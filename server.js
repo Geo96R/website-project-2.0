@@ -30,7 +30,7 @@ const blogData = JSON.parse(fs.readFileSync(path.join(__dirname, 'data', 'blog.j
 
 // Home route
 app.get('/', (req, res) => {
-  res.render('layout', { body: 'pages/home', blogPosts: blogData, title: 'Geo | Senior DevOps & Infrastructure Engineer' });
+  res.render('layout', { body: 'pages/home', blogPosts: blogData, title: 'Geo | DevOps' });
 });
 
 // Architecture page

@@ -97,7 +97,7 @@ Infrastructure changes under `infra/cloudflare/` trigger a separate Terraform wo
 | `CF_API_TOKEN` | Cloudflare API token (DNS, zone settings, WAF, bot management) |
 | `CF_ZONE_ID` | Cloudflare zone identifier |
 | `SERVER_IP` | Server IP for DNS A record |
-| `ALLOWED_IP` | Restricted access IP for Cloudflare WAF rules |
+| `ALLOWED_IP` | Restricted access IP for Cloudflare WAF rules (optional) |
 
 `GITHUB_TOKEN` is provided automatically by GitHub Actions for GHCR authentication.
 
