@@ -1,3 +1,33 @@
+// Mobile navigation
+(function () {
+  const nav = document.getElementById('site-nav');
+  const toggle = document.getElementById('nav-toggle');
+  const menu = document.getElementById('nav-menu');
+  if (!nav || !toggle || !menu) return;
+
+  function setOpen(open) {
+    nav.classList.toggle('nav-open', open);
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    document.body.style.overflow = open ? 'hidden' : '';
+  }
+
+  toggle.addEventListener('click', function () {
+    setOpen(!nav.classList.contains('nav-open'));
+  });
+
+  menu.querySelectorAll('a').forEach(function (a) {
+    a.addEventListener('click', function () { setOpen(false); });
+  });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') setOpen(false);
+  });
+
+  window.addEventListener('resize', function () {
+    if (window.innerWidth > 900) setOpen(false);
+  });
+})();
 
 // Skills expandable functionality
 const skillItems = document.querySelectorAll('.skill-item[data-skill]');
