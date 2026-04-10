@@ -48,5 +48,30 @@
     "id": "010",
     "category": "Kubernetes",
     "title": "Ingress2Gateway 1.0: a calmer path from Ingress to Gateway API"
+  },
+  {
+    "id": "011",
+    "category": "FinOps",
+    "title": "Kubernetes unit economics: when requests lie, and how to align cost signals with the AWS bill"
+  },
+  {
+    "id": "012",
+    "category": "Kubernetes",
+    "title": "Beyond CPU-based HPA: custom metrics, external signals, and queue-depth-aware scaling with KEDA"
+  },
+  {
+    "id": "013",
+    "category": "Kubernetes",
+    "title": "Operator upgrades without drama: CRD storage versions, conversion webhooks, and blast-radius control"
+  },
+  {
+    "id": "014",
+    "category": "Observability",
+    "title": "Cardinality budgets and tail sampling: keeping OpenTelemetry useful when traffic explodes"
+  },
+  {
+    "id": "015",
+    "category": "Platform",
+    "title": "Agents and MCP in production ops: least privilege, audit trails, and where automation should stop"
   }
 ]

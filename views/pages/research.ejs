@@ -5,7 +5,7 @@
     <div>
       <div class="s-tag">Industry Awareness</div>
       <h2 class="s-title">Research &amp; Industry Signals</h2>
-      <p class="s-desc">Observations on infrastructure trends and operational patterns, including early-2026 signals (Gateway API adoption, supply-chain hardening, platform engineering, AI-assisted code review).</p>
+      <p class="s-desc">Observations on infrastructure trends and operational patterns: Gateway API, supply chain, platform engineering, FinOps, agentic tooling, and observability at scale.</p>
     </div>
   </div>
   <div class="cases">
@@ -225,6 +225,116 @@
         <div class="c-sec">
           <div class="c-lbl">Pattern</div>
           <div class="c-txt">Harden CI entry points (issues, comments, forks), run workflow tests locally where possible, and keep an eye on emerging OSS around Terraform governance, Actions debugging in containers, and runtime guardrails for autonomous agents in your environment.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="case">
+      <div class="c-side">
+        <div class="c-num">SIGNAL / K</div>
+        <div class="c-title">Shared-Cluster FinOps: From Allocation Fiction to Invoice Literacy</div>
+        <div class="tags"><span class="tag">FinOps</span><span class="tag">Kubernetes</span></div>
+      </div>
+      <div class="c-body">
+        <div class="c-sec">
+          <div class="c-lbl">Trend</div>
+          <div class="c-txt">Multi-tenant Kubernetes is normal, but finance still asks &ldquo;who pays for the warm node pool?&rdquo; Practitioners are moving from pretty pie charts to pipelines that join CUR-style billing exports with kube-state-metrics and label policies, accepting that 100% precision is less valuable than directional truth plus trend.</div>
+        </div>
+        <div class="c-sec">
+          <div class="c-lbl">Implication</div>
+          <div class="c-txt">Platform teams become data stewards: namespace defaults, admission checks on required labels, and quarterly reconciliation meetings with finance. Optimization stories (rightsizing, spot, autoscaling) need owners tied to services, not anonymous cluster savings.</div>
+        </div>
+        <div class="c-sec">
+          <div class="c-lbl">Pattern</div>
+          <div class="c-txt">Publish two views: technical allocation (requests, usage) and economic allocation (amortized instance + disk + egress). Document what each cannot see. Align with <a href="https://www.finops.org/framework/capabilities/" rel="noopener noreferrer">FinOps capabilities</a> instead of reinventing taxonomy per tool.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="case">
+      <div class="c-side">
+        <div class="c-num">SIGNAL / L</div>
+        <div class="c-title">Continuous Profiling as Baseline, Not Boutique</div>
+        <div class="tags"><span class="tag">Performance</span><span class="tag">Observability</span></div>
+      </div>
+      <div class="c-body">
+        <div class="c-sec">
+          <div class="c-lbl">Trend</div>
+          <div class="c-txt">CPU profiles used to be a firefighting artifact; open-source stacks (for example Parca, Pyroscope-style backends) and vendor offerings now make always-on profiling cheaper at the language runtime level. The interesting shift is treating flame graphs as regression gates, not postmortem-only.</div>
+        </div>
+        <div class="c-sec">
+          <div class="c-lbl">Implication</div>
+          <div class="c-txt">SRE and platform teams need policies for PII in stacks, sampling rates, and retention that differ from traces. Profiling without release correlation (image digest, Git SHA) creates noise.</div>
+        </div>
+        <div class="c-sec">
+          <div class="c-lbl">Pattern</div>
+          <div class="c-txt">Wire profiling exporters next to OTel: same service identity, different cardinality rules. Compare hot paths release-over-release; block deploys only when combined with SLO regression to avoid false positives.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="case">
+      <div class="c-side">
+        <div class="c-num">SIGNAL / M</div>
+        <div class="c-title">eBPF Observability: Kernel Truth vs Operator Ergonomics</div>
+        <div class="tags"><span class="tag blue">Linux</span><span class="tag">Security</span></div>
+      </div>
+      <div class="c-body">
+        <div class="c-sec">
+          <div class="c-lbl">Trend</div>
+          <div class="c-txt">eBPF-based agents deliver syscall and network visibility without per-pod sidecars, but they also concentrate privilege. The ecosystem is maturing around signed BPF programs, least-privilege capabilities, and clearer boundaries between observability vendors and cluster admins.</div>
+        </div>
+        <div class="c-sec">
+          <div class="c-lbl">Implication</div>
+          <div class="c-txt">Security review shifts to the agent DaemonSet and its update channel. Compliance teams ask for proof of data minimization because kernel taps can see more than application telemetry.</div>
+        </div>
+        <div class="c-sec">
+          <div class="c-lbl">Pattern</div>
+          <div class="c-txt">Run eBPF collectors in dedicated node pools where possible; pin versions; mirror upstream CVE lists; pair kernel-level signals with application traces for triangulation. See <a href="https://ebpf.io/" rel="noopener noreferrer">ebpf.io</a> ecosystem docs for baseline literacy.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="case">
+      <div class="c-side">
+        <div class="c-num">SIGNAL / N</div>
+        <div class="c-title">Carbon-Aware and Topology-Aware Scheduling (Still Early, Still Real)</div>
+        <div class="tags"><span class="tag">Sustainability</span><span class="tag">Scheduling</span></div>
+      </div>
+      <div class="c-body">
+        <div class="c-sec">
+          <div class="c-lbl">Trend</div>
+          <div class="c-txt">Grid intensity and regional carbon data are entering scheduling conversations for batch and elastic workloads. Kubernetes SIG Scheduling and ecosystem projects experiment with plugins and external controllers that shift non-critical work toward cleaner windows without violating latency SLOs for interactive paths.</div>
+        </div>
+        <div class="c-sec">
+          <div class="c-lbl">Implication</div>
+          <div class="c-txt">This is not greenwashing if tied to measurable batch slack and clear SLO exclusions. Ops must document when deferral is forbidden (payments, safety, auth).</div>
+        </div>
+        <div class="c-sec">
+          <div class="c-lbl">Pattern</div>
+          <div class="c-txt">Start with idempotent jobs and training pipelines; integrate grid APIs cautiously; measure cost and completion-time variance before marketing wins. Pair with existing topology spread constraints so reliability does not regress.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="case">
+      <div class="c-side">
+        <div class="c-num">SIGNAL / O</div>
+        <div class="c-title">Infrastructure-as-Data vs Imperative Glue: Rego, CEL, and the Policy Middle Layer</div>
+        <div class="tags"><span class="tag">Policy</span><span class="tag">Automation</span></div>
+      </div>
+      <div class="c-body">
+        <div class="c-sec">
+          <div class="c-lbl">Trend</div>
+          <div class="c-txt">Admission, Terraform, and service mesh increasingly expose policy as declarative expressions (OPA/Rego, Kyverno with CEL, Envoy attributes). Teams that once scripted checks in CI are moving logic closer to enforcement points, with tests that prove policies on representative payloads.</div>
+        </div>
+        <div class="c-sec">
+          <div class="c-lbl">Implication</div>
+          <div class="c-txt">Policy becomes a product: versioning, review, rollouts, and observability on denials. Debugging &ldquo;why was this blocked&rdquo; requires UX investment, not longer error strings alone.</div>
+        </div>
+        <div class="c-sec">
+          <div class="c-lbl">Pattern</div>
+          <div class="c-txt">Co-locate policy repos with platform modules; run conftest-style tests in CI; publish allowlists for exceptions with TTLs. Reference <a href="https://openpolicyagent.org/docs/latest/" rel="noopener noreferrer">Open Policy Agent</a> and Kubernetes <a href="https://kubernetes.io/docs/reference/using-api/cel/" rel="noopener noreferrer">CEL in APIs</a> as complementary, not competing, literacy.</div>
         </div>
       </div>
     </div>
