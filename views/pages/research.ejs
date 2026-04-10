@@ -338,5 +338,27 @@
         </div>
       </div>
     </div>
+
+    <div class="case">
+      <div class="c-side">
+        <div class="c-num">SIGNAL / P</div>
+        <div class="c-title">Docker Offload: engine in the cloud, same local workflow</div>
+        <div class="tags"><span class="tag">Containers</span><span class="tag">Developer experience</span><span class="tag">Security</span></div>
+      </div>
+      <div class="c-body">
+        <div class="c-sec">
+          <div class="c-lbl">Trend</div>
+          <div class="c-txt">Docker <a href="https://docs.docker.com/offload/" rel="noopener noreferrer">Offload</a> runs the container engine in Docker-managed cloud capacity instead of on the laptop, while you keep the same CLI, Docker Desktop, and Compose workflows. Bind mounts and port forwarding are intended to feel unchanged so day-to-day commands stay familiar.</div>
+        </div>
+        <div class="c-sec">
+          <div class="c-lbl">Implication</div>
+          <div class="c-txt">Restricted orgs where local containers are painful (security policy, underpowered hardware, or VDI) get a cleaner story. Workloads execute in isolated cloud sessions with no long-lived local persistence, which pairs well with centralized logging, SSO, and IAM expectations. The tension between strict desktop policy and developer productivity shifts toward policy on cloud sessions rather than banning containers outright.</div>
+        </div>
+        <div class="c-sec">
+          <div class="c-lbl">Pattern</div>
+          <div class="c-txt">Treat Offload like any remote build or dev environment: confirm data residency, network paths, and audit requirements before standardizing. Docker is signaling <a href="https://www.docker.com/products/docker-offload/" rel="noopener noreferrer">bring-your-own-cloud</a> options, GPU-backed workloads for AI and ML, and deeper CI and CD hooks over time. Availability sits with <a href="https://www.docker.com/blog/docker-offload-now-generally-available-the-full-power-of-docker-for-every-developer-everywhere/" rel="noopener noreferrer">Docker Business</a> tiers, so platform teams should align procurement and identity with how sessions are attributed and logged.</div>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
