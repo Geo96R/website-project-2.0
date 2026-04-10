@@ -216,6 +216,31 @@ window.addEventListener('scroll', () => {
   lastScroll = scrollY;
 }, { passive: true });
 
+// Copy-paste prompt blocks (blog and elsewhere)
+document.querySelectorAll('.prompt-sheet-copy[data-copy-target]').forEach(function (btn) {
+  btn.addEventListener('click', function () {
+    if (btn.disabled) return;
+    var id = btn.getAttribute('data-copy-target');
+    var el = id ? document.getElementById(id) : null;
+    if (!el) return;
+    var text = el.textContent || '';
+    var label = btn.getAttribute('data-copy-label') || btn.textContent.trim() || 'Copy';
+    function done(ok) {
+      btn.textContent = ok ? 'Copied' : 'Failed';
+      btn.disabled = true;
+      setTimeout(function () {
+        btn.textContent = label;
+        btn.disabled = false;
+      }, 2000);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function () { done(true); }).catch(function () { done(false); });
+    } else {
+      done(false);
+    }
+  });
+});
+
 // Blog accordion functionality
 const blogItems = document.querySelectorAll('.blog-item[data-blog-index]');
 blogItems.forEach(item => {

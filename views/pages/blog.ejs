@@ -107,6 +107,39 @@
         <div class="b-sec"><div class="b-lbl">Architectural reasoning</div><div class="b-txt">Treat agents like service accounts: scoped RBAC, short-lived tokens, read-only defaults, and separate identities per environment. Log tool calls with correlation IDs tied to tickets. Follow vendor-neutral hygiene from NIST-style AI risk framing and your own change-management policy; the <a href="https://modelcontextprotocol.io/" rel="noopener noreferrer">MCP specification</a> is transport and capability negotiation, not a security boundary by itself.</div></div>
         <div class="b-sec"><div class="b-lbl">Trade-offs</div><div class="b-txt">Tight scopes slow the demo. Human-in-the-loop gates add latency but preserve accountability.</div></div>
         <div class="b-sec"><div class="b-lbl">Implementation pattern</div><div class="b-txt">Start with read-only MCP tools (logs, metrics, docs). Add mutation behind approval workflows or deployment pipelines. Rotate credentials on the same schedule as CI tokens. Red-team prompt paths quarterly.</div></div>
+        <% } else if (post.id === '016') { %>
+        <div class="b-sec"><div class="b-lbl">Summary</div><div class="b-txt">Clean up the root <code>CLAUDE.md</code> and the copies nested in each project. The point is not to delete rules that change behavior. The point is to strip everything that burns context without adding executable value.</div></div>
+        <div class="b-sec"><div class="b-lbl">Why it matters</div><div class="b-txt">That file behaves like a standing system prompt. When it is long, repetitive, or full of essays and warnings instead of instructions, every turn pays tokens for noise. Real directives get buried, so the model attends to the wrong lines.</div></div>
+        <div class="b-sec"><div class="b-lbl">What breaks</div><div class="b-txt">Higher token use per turn<br>Cost adds up across sessions<br>The context window fills with low-signal text<br>Less room for code, diffs, and logs<br>Harder to see the rules that actually matter</div></div>
+        <div class="b-sec"><div class="b-lbl">Intent</div><div class="b-txt">Keep one hundred percent of functional value. Shrink size aggressively. Same behavior, fewer tokens, clearer focus.</div></div>
+        <div class="b-sec"><div class="b-lbl">Keep</div><div class="b-txt">Technical rules, shell commands, file paths, code samples, required workflows, security constraints, and explicit notes on what to update and when.</div></div>
+        <div class="b-sec"><div class="b-lbl">Remove or shorten</div><div class="b-txt">Long motivation for why a rule exists, duplicated sections, redundant checklists, pep-talk warnings, and prose that can become one tight bullet or table.</div></div>
+        <div class="b-sec"><div class="b-lbl">Prompt</div><div class="b-txt">Use the block below as a single message to an agent. Copy the whole thing, then run it against your tree.</div></div>
+        <div class="prompt-sheet" role="region" aria-label="Copy-paste prompt for optimizing CLAUDE.md files">
+          <div class="prompt-sheet-bar">
+            <span class="prompt-sheet-label">Copy-paste prompt</span>
+            <button type="button" class="prompt-sheet-copy" data-copy-target="prompt-claude-md-016" aria-label="Copy prompt to clipboard">Copy</button>
+          </div>
+          <pre class="prompt-sheet-body" id="prompt-claude-md-016">Optimize all my CLAUDE.md files to minimize token usage without losing any functional power.
+
+Rules:
+• Keep ALL technical rules, code patterns, commands, and &quot;what to update when&quot; instructions
+• Remove verbose explanations of why rules exist, just keep the rule itself
+• Remove repeated &quot;when to use&quot; checklists that restate the obvious
+• Remove motivational/warning paragraphs (&quot;do NOT skip this&quot;, &quot;remember: X is important&quot;)
+• Condense bullet lists, if 5 bullets say the same thing, make it 1
+• Replace long prose with tables or compact bullet points where possible
+• Never remove: code examples, file paths, CLI commands, security patterns, mandatory workflows
+
+Process:
+Find all CLAUDE.md files across all projects in memory
+Read each file fully before optimizing
+Write optimized versions, target 40 to 60 percent reduction in line count
+Do NOT touch files that are already concise (under ~30 lines)
+
+Goal:
+Same behavior, half the tokens per session</pre>
+        </div>
         <% } %>
       </div>
     </div>

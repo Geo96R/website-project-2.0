@@ -73,5 +73,10 @@
     "id": "015",
     "category": "Platform",
     "title": "Agents and MCP in production ops: least privilege, audit trails, and where automation should stop"
+  },
+  {
+    "id": "016",
+    "category": "AI workflow",
+    "title": "Optimizing CLAUDE.md files to cut token waste without losing behavior"
   }
 ]
