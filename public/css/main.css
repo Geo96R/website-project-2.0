@@ -150,14 +150,20 @@ section{padding:108px 52px;border-top:1px solid var(--border);max-width:100vw;bo
 .blog-content-inner .b-sec{margin-bottom:26px}
 .blog-content-inner .b-lbl{font-family:var(--mono);font-size:10px;color:var(--accent);text-transform:uppercase;letter-spacing:.16em;margin-bottom:8px;display:block}
 .blog-content-inner .b-txt{font-family:var(--mono);font-size:13px;color:var(--text-1);line-height:1.9}
-.prompt-sheet{margin-top:8px;border:1px solid rgba(155,125,234,.35);background:linear-gradient(165deg,rgba(155,125,234,.08) 0%,var(--bg-2) 45%);border-radius:6px;overflow:hidden;box-shadow:0 0 0 1px rgba(0,0,0,.2)}
-.prompt-sheet-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 14px;background:rgba(155,125,234,.12);border-bottom:1px solid rgba(155,125,234,.22)}
-.prompt-sheet-label{font-family:var(--mono);font-size:10px;color:var(--violet);letter-spacing:.14em;text-transform:uppercase}
-.prompt-sheet-copy{font-family:var(--mono);font-size:11px;color:var(--bg-0);background:var(--violet);border:1px solid rgba(155,125,234,.5);padding:6px 14px;border-radius:4px;cursor:pointer;letter-spacing:.06em;text-transform:uppercase;transition:background .2s,transform .15s}
-.prompt-sheet-copy:hover{background:#b09ef0}
-.prompt-sheet-copy:active{transform:scale(.98)}
-.prompt-sheet-copy:disabled{opacity:.7;cursor:default}
-.prompt-sheet-body{font-family:var(--mono);font-size:12px;line-height:1.65;color:var(--text-0);margin:0;padding:16px 18px 20px;white-space:pre-wrap;word-break:break-word;max-height:min(420px,55vh);overflow:auto;background:rgba(7,10,14,.35)}
+/* ChatGPT-style copyable code / prompt block */
+.copy-code-block{position:relative;margin-top:10px;border-radius:10px;border:1px solid var(--border-hi);background:#0d1117;box-shadow:inset 0 1px 0 rgba(255,255,255,.04)}
+.copy-code-block-btn{position:absolute;top:10px;right:10px;z-index:2;display:flex;align-items:center;justify-content:center;width:36px;height:36px;padding:0;border:1px solid rgba(255,255,255,.12);border-radius:8px;background:rgba(255,255,255,.06);color:var(--text-1);cursor:pointer;transition:background .15s,color .15s,border-color .15s}
+.copy-code-block-btn:hover{background:rgba(255,255,255,.1);color:var(--text-0);border-color:rgba(255,255,255,.18)}
+.copy-code-block-btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.copy-code-block-btn:disabled{cursor:default;pointer-events:none}
+.copy-code-block-btn.is-copied{background:rgba(0,212,170,.12);border-color:rgba(0,212,170,.35);color:var(--accent)}
+.copy-code-block-btn.is-fail{border-color:rgba(255,71,87,.4);color:var(--red)}
+.copy-code-block-icon{display:block;flex-shrink:0}
+.copy-code-block-btn .copy-code-block-icon-check{display:none}
+.copy-code-block-btn.is-copied .copy-code-block-icon-copy{display:none}
+.copy-code-block-btn.is-copied .copy-code-block-icon-check{display:block}
+.copy-code-block-pre{font-family:var(--mono);font-size:12px;line-height:1.65;color:#e6edf3;margin:0;padding:48px 18px 18px;white-space:pre;overflow-x:auto;overflow-y:auto;word-break:normal;max-height:min(420px,55vh);tab-size:2;border-radius:10px}
+@media(max-width:640px){.copy-code-block-pre{font-size:11px;padding-left:14px;padding-right:14px}}
 
 /* POSITIONING STRIP */
 .pos-strip{background:var(--bg-1);border:1px solid var(--border-hi);padding:28px 40px;font-family:var(--mono);font-size:13px;color:var(--text-1);line-height:1.9;border-left:3px solid var(--accent)}

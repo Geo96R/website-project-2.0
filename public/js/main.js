@@ -216,28 +216,54 @@ window.addEventListener('scroll', () => {
   lastScroll = scrollY;
 }, { passive: true });
 
-// Copy-paste prompt blocks (blog and elsewhere)
-document.querySelectorAll('.prompt-sheet-copy[data-copy-target]').forEach(function (btn) {
+// Copyable code / prompt blocks (icon button, ChatGPT-style)
+function copyTextFallback(text) {
+  var ta = document.createElement('textarea');
+  ta.value = text;
+  ta.setAttribute('readonly', '');
+  ta.style.position = 'fixed';
+  ta.style.left = '-9999px';
+  ta.style.top = '0';
+  document.body.appendChild(ta);
+  ta.focus();
+  ta.select();
+  ta.setSelectionRange(0, text.length);
+  var ok = false;
+  try {
+    ok = document.execCommand('copy');
+  } catch (e) {
+    ok = false;
+  }
+  document.body.removeChild(ta);
+  return ok;
+}
+
+function copyTextToClipboard(text) {
+  if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+    return navigator.clipboard.writeText(text).then(function () { return true; }).catch(function () {
+      return copyTextFallback(text);
+    });
+  }
+  return Promise.resolve(copyTextFallback(text));
+}
+
+document.querySelectorAll('.copy-code-block-btn[data-copy-target]').forEach(function (btn) {
   btn.addEventListener('click', function () {
     if (btn.disabled) return;
     var id = btn.getAttribute('data-copy-target');
     var el = id ? document.getElementById(id) : null;
     if (!el) return;
     var text = el.textContent || '';
-    var label = btn.getAttribute('data-copy-label') || btn.textContent.trim() || 'Copy';
-    function done(ok) {
-      btn.textContent = ok ? 'Copied' : 'Failed';
-      btn.disabled = true;
+    btn.disabled = true;
+    btn.classList.remove('is-copied', 'is-fail');
+    copyTextToClipboard(text).then(function (ok) {
+      btn.classList.toggle('is-copied', ok);
+      btn.classList.toggle('is-fail', !ok);
       setTimeout(function () {
-        btn.textContent = label;
+        btn.classList.remove('is-copied', 'is-fail');
         btn.disabled = false;
-      }, 2000);
-    }
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(text).then(function () { done(true); }).catch(function () { done(false); });
-    } else {
-      done(false);
-    }
+      }, ok ? 2000 : 2500);
+    });
   });
 });
 
