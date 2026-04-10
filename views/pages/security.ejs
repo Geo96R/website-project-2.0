@@ -22,7 +22,7 @@
         credential stuffing. Rate limiting per IP and per path with burst allowances
         tuned to preserve legitimate crawler access. Bot Fight Mode and CAPTCHA challenges
         deployed selectively. Rules written from live attack data and progressively
-        cleaned up after traffic normalizes  no permanent emergency state.
+        cleaned up after traffic normalizes. No permanent emergency state.
       </div>
     </div>
     <div class="panel">
@@ -32,7 +32,7 @@
         OWASP CRS deployed on production NGINX hosts. Paranoia level calibrated per
         environment. Rule IDs adjusted for application-specific false positive patterns
         using <code style="color:var(--amber)">SecRuleRemoveById</code> scoped to
-        affected URL paths  not globally disabled. CRS tuning applied in audit
+        affected URL paths, not globally disabled. CRS tuning applied in audit
         mode first, then enforcement, validated against captured production request samples.
       </div>
     </div>
@@ -42,9 +42,48 @@
       <div class="p-body">
         AI tooling integrated into the operations workflow for log pattern analysis,
         anomaly triage, and automation script generation. Experience deploying
-        AI-backed applications  including Supabase-authenticated services with
+        AI-backed applications, including Supabase-authenticated services with
         vector storage, API gateway integration, and user session management in
         containerized environments.
+      </div>
+    </div>
+  </div>
+
+  <div class="panel-grid g3" style="margin-top:3rem;">
+    <div class="panel">
+      <div class="p-badge">Kubernetes</div>
+      <div class="p-title">Cluster controls and isolation</div>
+      <div class="p-body">
+        RBAC limits who can change what in the API. NetworkPolicies constrain pod-to-pod
+        traffic so workloads cannot talk to everything by default. Admission controllers
+        and policy enforce allowed images, labels, and security context before objects
+        land in the cluster. Pod Security or restricted defaults keep privileged pods from
+        becoming the norm. System components and platform services live in dedicated
+        namespaces, separate from application workloads, so blast radius and change
+        ownership stay clear.
+      </div>
+    </div>
+    <div class="panel">
+      <div class="p-badge">Host access</div>
+      <div class="p-title">SSH hardening and key lifecycle</div>
+      <div class="p-body">
+        Access uses key-based authentication only. Root login over SSH is disabled.
+        <code style="color:var(--amber)">AllowUsers</code> (or equivalent match blocks)
+        limits which accounts may connect. Mandatory SSH key rotation runs on a defined
+        cadence. Private key material is stored in a vault, issued or rotated from there,
+        and not copied by hand across hosts.
+      </div>
+    </div>
+    <div class="panel">
+      <div class="p-badge">Administrative access</div>
+      <div class="p-title">Bastion and private infrastructure</div>
+      <div class="p-body">
+        Access to internal servers is restricted through a bastion host. All infrastructure
+        stays private and is not exposed on the public internet. Administrative paths go
+        only through that entry point. The bastion sits behind VPN access and is
+        monitored continuously for sign-in and session activity. It is the single
+        controlled gateway for ops access to internal systems, instead of many
+        direct SSH endpoints on the open network.
       </div>
     </div>
   </div>
