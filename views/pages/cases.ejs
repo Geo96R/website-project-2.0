@@ -207,5 +207,59 @@
       </div>
     </div>
 
+    <div class="case">
+      <div class="c-side">
+        <div class="c-num">CASE / 008</div>
+        <div class="c-title">Matomo on Kubernetes: the archiver that never finished</div>
+        <div class="tags"><span class="tag blue">Kubernetes</span><span class="tag">Matomo</span><span class="tag">CronJob</span><span class="tag amber">Reliability</span></div>
+      </div>
+      <div class="c-body">
+        <div class="c-sec">
+          <div class="c-lbl red">Problem</div>
+          <div class="c-txt">Matomo was deployed on Kubernetes to avoid reliance on a single VM for traffic and reporting. While visit data continued to land in the live database, historical reports in the UI and API appeared stale or incomplete. Cluster health checks were green, and ingress was functioning correctly, masking the real issue.<br><br>The underlying problem surfaced only through pod logs and Kubernetes events. Matomo&apos;s archiver, responsible for converting raw visit data into pre-aggregated report tables, was not completing successfully. This process is critical for keeping read queries efficient. Without completed archiving, dashboards and integrations either query the live dataset directly, increasing load, or display incomplete reporting periods.<br><br>The archiver was configured as a Kubernetes CronJob running every fifteen minutes. Each execution attempted to process a growing backlog. As workload increased, memory consumption exceeded container limits, triggering OOMKills by the kubelet. Kubernetes restarted the job, but since no execution ever completed, each run restarted from scratch. The backlog never drained, creating a loop of failed attempts. Externally, this presented as slow or inaccurate reporting. Internally, it was a continuous cycle of termination and restart with no durable completion state.</div>
+        </div>
+        <div class="c-sec">
+          <div class="c-lbl">Constraints</div>
+          <div class="c-txt">Resource limits could not be removed due to shared node pool constraints. Tracking endpoint availability had to remain uninterrupted. Additionally, allowing a single large archive run to persist indefinitely was not viable, as data volume would continue to grow.</div>
+        </div>
+        <div class="c-sec">
+          <div class="c-lbl">Architecture Decision</div>
+          <div class="c-txt">The archiver was reclassified as a batch workload with a defined resource profile rather than a lightweight cron task. Memory requests and limits were increased to allow a full archive pass to complete on a representative backlog. This was validated through resource metrics and the absence of further OOM events.<br><br>The CronJob schedule was adjusted to reduce overlap between runs, preventing contention and compounding database load. Concurrency was controlled to ensure only a single archiver instance executed at any time.<br><br>Workload per run was also reduced using Matomo configuration options, such as limiting date ranges, batching sites, or executing initial backlog processing via a one-off Kubernetes Job with elevated resource limits. This allowed routine scheduled runs to remain lightweight and predictable.<br><br>Documentation was updated to clearly define the separation between live ingestion and archived reporting data, emphasizing the archiver as the critical bridge between the two.</div>
+        </div>
+        <div class="c-sec">
+          <div class="c-lbl">Trade-offs</div>
+          <div class="c-txt">Increasing memory allocation per job reduced available node capacity. Less frequent archiving introduced minor delays in report freshness. However, delayed accuracy was preferable to incomplete or failed report generation. Manual catch-up jobs required operational discipline to avoid becoming a persistent workaround.</div>
+        </div>
+        <div class="c-outcome">Outcome: Archiving completed successfully end to end, OOMKills ceased, and historical reporting became consistent across all properties. Database load on the live dataset decreased, as dashboards returned to using pre-aggregated data. The issue was ultimately resolved through correct workload sizing, scheduling, and concurrency control, not by scaling the application itself.</div>
+      </div>
+    </div>
+
+    <div class="case">
+      <div class="c-side">
+        <div class="c-num">CASE / 009</div>
+        <div class="c-title">Cheaper compute for dev and non-critical workloads without impacting productivity</div>
+        <div class="tags"><span class="tag">FinOps</span><span class="tag">AWS</span><span class="tag amber">Cost</span><span class="tag">Dev environments</span></div>
+      </div>
+      <div class="c-body">
+        <div class="c-sec">
+          <div class="c-lbl red">Problem</div>
+          <div class="c-txt">Production infrastructure is typically well-optimized and tightly monitored, with clear cost attribution. The real inefficiency often comes from non-production environments such as development accounts, sandboxes, internal tools, and batch workloads. These systems do not directly generate revenue but can accumulate significant cost over time.<br><br>Common patterns include over-provisioned virtual machines, always-on development hosts running at production-level capacity, and serverless functions configured with outdated memory and timeout settings. These environments are rarely revisited because they are considered lower priority.</div>
+        </div>
+        <div class="c-sec">
+          <div class="c-lbl">Constraints</div>
+          <div class="c-txt">Any optimization must not disrupt developer workflows or slow down iteration speed. Development environments need to remain responsive and reliable during active use. Changes must also be low-risk, reversible, and easy to reason about, avoiding complex commitments or long-term capacity planning for non-critical workloads.</div>
+        </div>
+        <div class="c-sec">
+          <div class="c-lbl">Architecture Approach</div>
+          <div class="c-txt">The focus shifts to identifying workloads that do not require consistent high performance or 24/7 availability. These are ideal candidates for cost-efficient compute options.<br><br>Burstable instance types provide a strong fit for development and internal services. They deliver baseline performance with the ability to burst when needed, using CPU credits. Since most development workloads are intermittent rather than constant, they rarely exhaust these credits in practice.<br><br>For long-running but non-critical services, moving to burstable instances significantly reduces cost while maintaining acceptable performance during active usage. Credit balance monitoring ensures that performance remains stable during testing or temporary load spikes.<br><br>Additionally, workloads that do not require continuous uptime can be scheduled or stopped entirely during inactive periods. Serverless functions can also be optimized by aligning memory and timeout settings with real usage patterns, ensuring resources are not over-allocated.<br><br>Clear tagging by environment and cost center helps maintain visibility and accountability without introducing complexity.</div>
+        </div>
+        <div class="c-sec">
+          <div class="c-lbl">Trade-offs</div>
+          <div class="c-txt">Burstable instances require basic awareness of CPU credit behavior, especially during sustained load testing. However, this is typically predictable and manageable in development environments. Reducing serverless timeouts too aggressively can introduce edge cases if upstream services respond slowly, so reasonable buffers should be maintained.</div>
+        </div>
+        <div class="c-outcome">Outcome: Compute costs for development and internal workloads can be significantly reduced without affecting developer experience. Systems remain responsive during active use, while idle or low-intensity periods benefit from lower-cost resource allocation. The result is a predictable and efficient cost model where non-critical workloads use appropriately sized infrastructure, without compromising productivity or introducing operational risk.</div>
+      </div>
+    </div>
+
   </div>
 </section>
