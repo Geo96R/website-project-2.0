@@ -216,14 +216,19 @@ window.addEventListener('scroll', () => {
   lastScroll = scrollY;
 }, { passive: true });
 
-// Copyable code / prompt blocks (icon button, ChatGPT-style)
-function copyTextFallback(text) {
+// Copyable blog snippets (sync execCommand first keeps user-activation for strict browsers)
+function copyTextExecCommand(text) {
   var ta = document.createElement('textarea');
   ta.value = text;
   ta.setAttribute('readonly', '');
   ta.style.position = 'fixed';
-  ta.style.left = '-9999px';
+  ta.style.left = '0';
   ta.style.top = '0';
+  ta.style.width = '1px';
+  ta.style.height = '1px';
+  ta.style.padding = '0';
+  ta.style.border = 'none';
+  ta.style.opacity = '0';
   document.body.appendChild(ta);
   ta.focus();
   ta.select();
@@ -239,27 +244,31 @@ function copyTextFallback(text) {
 }
 
 function copyTextToClipboard(text) {
+  if (copyTextExecCommand(text)) {
+    return Promise.resolve(true);
+  }
   if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
     return navigator.clipboard.writeText(text).then(function () { return true; }).catch(function () {
-      return copyTextFallback(text);
+      return false;
     });
   }
-  return Promise.resolve(copyTextFallback(text));
+  return Promise.resolve(false);
 }
 
-document.querySelectorAll('.copy-code-block-btn[data-copy-target]').forEach(function (btn) {
-  btn.addEventListener('click', function () {
+document.querySelectorAll('.blog-snippet-copy[data-copy-target]').forEach(function (btn) {
+  btn.addEventListener('click', function (e) {
+    e.preventDefault();
     if (btn.disabled) return;
     var id = btn.getAttribute('data-copy-target');
     var el = id ? document.getElementById(id) : null;
     if (!el) return;
     var text = el.textContent || '';
-    btn.disabled = true;
     btn.classList.remove('is-copied', 'is-fail');
     copyTextToClipboard(text).then(function (ok) {
       btn.classList.toggle('is-copied', ok);
       btn.classList.toggle('is-fail', !ok);
-      setTimeout(function () {
+      btn.disabled = true;
+      window.setTimeout(function () {
         btn.classList.remove('is-copied', 'is-fail');
         btn.disabled = false;
       }, ok ? 2000 : 2500);
