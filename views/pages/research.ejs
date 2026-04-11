@@ -360,5 +360,27 @@
         </div>
       </div>
     </div>
+
+    <div class="case">
+      <div class="c-side">
+        <div class="c-num">SIGNAL / Q</div>
+        <div class="c-title">Amazon S3 Files: object buckets exposed as POSIX-style mounts</div>
+        <div class="tags"><span class="tag">AWS</span><span class="tag">Storage</span><span class="tag">Architecture</span></div>
+      </div>
+      <div class="c-body">
+        <div class="c-sec">
+          <div class="c-lbl">Trend</div>
+          <div class="c-txt">AWS launched <a href="https://aws.amazon.com/s3/features/files/" rel="noopener noreferrer">Amazon S3 Files</a> so general-purpose buckets can be <a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/s3-files-mounting.html" rel="noopener noreferrer">mounted as a file system</a> from supported compute (for example EC2, EKS, ECS, and Lambda). Applications use normal open, read, write, and permission semantics while the service maps operations to S3 APIs and keeps the authoritative dataset in the bucket. That closes a long-standing gap where teams otherwise relied on EFS, one-off sync jobs, or duplicated data just to satisfy file-oriented workloads on top of object storage.</div>
+        </div>
+        <div class="c-sec">
+          <div class="c-lbl">Implication</div>
+          <div class="c-txt">Architecture conversations shift from &ldquo;how do we copy or sync out of S3&rdquo; toward &ldquo;how do we share one bucket safely across services.&rdquo; Machine learning pipelines, multi-tenant containers, collaborative analytics, and agent-style workloads that need durable shared state can target a single S3-backed namespace instead of maintaining parallel file tiers for the same logical dataset.</div>
+        </div>
+        <div class="c-sec">
+          <div class="c-lbl">Pattern</div>
+          <div class="c-txt">S3 Files is not a substitute for local NVMe or ultra-low-latency block IO. Expect caching and synchronization behavior, measure latency and throughput for real access patterns, and reserve it for distributed shared read and write rather than hot single-threaded scratch disks. Pilot with one workload class, document failure modes, and only then retire bespoke sync pipelines or redundant file layers. Background: <a href="https://aws.amazon.com/blogs/aws/launching-s3-files-making-s3-buckets-accessible-as-file-systems/" rel="noopener noreferrer">AWS News Blog on S3 Files</a>.</div>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
